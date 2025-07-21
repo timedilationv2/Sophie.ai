@@ -1,14 +1,16 @@
+console.log("JS loaded ✅");
+
 let models = [];
 
-// Fetch the model data
 fetch('data/ai_models.json')
   .then(response => response.json())
   .then(data => {
+    console.log("Data loaded:", data);
     models = data;
-    render(models); // show all by default
-  });
+    render(models);
+  })
+  .catch(error => console.error("Fetch error:", error));
 
-// Handle search
 document.getElementById('search').addEventListener('input', function () {
   const q = this.value.toLowerCase();
   const filtered = models.filter(m =>
@@ -19,7 +21,6 @@ document.getElementById('search').addEventListener('input', function () {
   render(filtered);
 });
 
-// Render results to page
 function render(modelList) {
   const container = document.getElementById('results');
   container.innerHTML = modelList.map(model => `
@@ -33,4 +34,3 @@ function render(modelList) {
     </div>
   `).join('');
 }
-
