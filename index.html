@@ -1,13 +1,360 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Sophie.AI – AI Index</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophie.AI - AI Model Navigator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Warm Neutrals) -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard. The layout features a persistent filter sidebar on the left (on desktop) and a main content area on the right. The content area includes an introduction, an interactive chart for visual comparison, and a dynamic grid of AI model cards. This structure was chosen because it provides a familiar and highly effective user experience for exploring and filtering a catalog of items. It allows users to immediately see the data, understand how to interact with it via the clear filtering options, and see the results of their interactions update in real-time, directly fulfilling the report's objective of simplifying model discovery and comparison. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Central Index of AI Models -> Goal: Organize & Compare -> Viz/Presentation: Interactive grid of cards (HTML/Tailwind) -> Interaction: Users can filter the cards using a search bar, provider dropdown, and use-case checkboxes. The grid updates instantly. -> Justification: This is the most intuitive way to browse a catalog, offering scannable information on cards and powerful filtering. -> Library/Method: Vanilla JS.
+        - Report Info: Model quantitative attributes (e.g., context size) -> Goal: Compare -> Viz/Presentation: Bar Chart -> Interaction: The chart dynamically updates to show only the models that match the user's current filter selection. -> Justification: A chart provides a much clearer and faster way to compare numerical data across models than reading text, enhancing the user's ability to synthesize information. -> Library/Method: Chart.js (Canvas).
+        - Report Info: Planned Features -> Goal: Inform -> Viz/Presentation: Styled text sections with icons. -> Interaction: Static content. -> Justification: As these are future plans, a clear textual description is the most appropriate way to convey this information. -> Library/Method: HTML/Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcfb;
+            color: #1f2937;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            max-height: 50vh;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .filter-section {
+            position: sticky;
+            top: 1.5rem;
+            height: calc(100vh - 3rem);
+        }
+    </style>
 </head>
-<body>
-  <h1>Sophie.AI</h1>
-  <input type="text" id="search" placeholder="Search models..." />
-  <div id="results"></div>
-<script defer src="script.js"></script>
+<body class="antialiased">
+    <div id="app" class="min-h-screen">
+        
+        <header class="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-gray-800">Sophie.AI</h1>
+                    <p class="text-sm text-gray-500 hidden sm:block">Navigate the AI Ecosystem</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-8">
+
+                <aside class="lg:col-span-1 mb-8 lg:mb-0">
+                    <div class="filter-section">
+                        <div class="p-6 bg-white rounded-xl border border-gray-200 shadow-sm h-full overflow-y-auto">
+                            <h2 class="text-lg font-semibold mb-4">Explore Models</h2>
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
+                                    <input type="text" id="search" placeholder="e.g., GPT-4o" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                </div>
+                                <div>
+                                    <label for="provider-filter" class="block text-sm font-medium text-gray-700 mb-1">Provider</label>
+                                    <select id="provider-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                        <option value="">All Providers</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-700 mb-2">Use Case</h3>
+                                    <div id="use-case-filters" class="space-y-2">
+                                    </div>
+                                </div>
+                                <div>
+                                    <button id="reset-filters" class="w-full text-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">Reset Filters</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                
+                <div class="lg:col-span-3">
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
+                        <h2 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">Welcome to the AI Model Navigator</h2>
+                        <p class="text-gray-600">
+                           This interactive prototype for Sophie.AI helps you explore the rapidly expanding landscape of AI. Use the filters on the left to discover, compare, and learn about various Large Language Models (LLMs). The goal is to simplify your search for the right AI tool by providing a centralized, easy-to-navigate index of their capabilities, costs, and more.
+                        </p>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
+                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Context Window Comparison (Tokens)</h3>
+                         <p class="text-sm text-gray-500 mb-4">This chart visualizes the maximum context window of the currently filtered models. A larger context window allows the model to process and remember more information from a single prompt. This chart updates as you apply filters.</p>
+                        <div class="chart-container">
+                            <canvas id="contextChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div id="models-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    </div>
+                     <p id="no-results" class="text-center text-gray-500 py-12 hidden">No models match your criteria.</p>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        const aiModelsData = [
+            {
+                "name": "GPT-4o",
+                "provider": "OpenAI",
+                "use_cases": ["Chatbot", "Creative Writing", "Code Generation", "Multimodal"],
+                "context_length": 128000,
+                "cost": { "input": 5.00, "output": 15.00 },
+                "notes": "Flagship multimodal model with vision capabilities. Highly capable across a wide range of tasks."
+            },
+            {
+                "name": "Claude 3 Opus",
+                "provider": "Anthropic",
+                "use_cases": ["Research & Analysis", "Creative Writing", "Chatbot"],
+                "context_length": 200000,
+                "cost": { "input": 15.00, "output": 75.00 },
+                "notes": "Top-tier model known for its deep reasoning, analysis, and large context window."
+            },
+            {
+                "name": "Gemini 1.5 Pro",
+                "provider": "Google",
+                "use_cases": ["Research & Analysis", "Code Generation", "Multimodal"],
+                "context_length": 1000000,
+                "cost": { "input": 3.50, "output": 10.50 },
+                "notes": "Features a massive 1M token context window, making it ideal for long-document analysis."
+            },
+            {
+                "name": "Claude 3 Sonnet",
+                "provider": "Anthropic",
+                "use_cases": ["Chatbot", "Code Generation"],
+                "context_length": 200000,
+                "cost": { "input": 3.00, "output": 15.00 },
+                "notes": "A balanced model offering a blend of performance and speed, suitable for enterprise workloads."
+            },
+            {
+                "name": "Llama 3 70B",
+                "provider": "Meta",
+                "use_cases": ["Chatbot", "Creative Writing"],
+                "context_length": 8192,
+                "cost": { "input": 0.59, "output": 0.79 },
+                "notes": "High-performing open-source model, great for fine-tuning and custom deployments."
+            },
+            {
+                "name": "GPT-4 Turbo",
+                "provider": "OpenAI",
+                "use_cases": ["Code Generation", "Research & Analysis", "Chatbot"],
+                "context_length": 128000,
+                "cost": { "input": 10.00, "output": 30.00 },
+                "notes": "Optimized for performance and lower cost than the original GPT-4, with a large context window."
+            },
+            {
+                "name": "Gemini 1.5 Flash",
+                "provider": "Google",
+                "use_cases": ["Chatbot", "Multimodal"],
+                "context_length": 1000000,
+                "cost": { "input": 0.35, "output": 1.05 },
+                "notes": "A lighter, faster version of Gemini 1.5 Pro, designed for speed-critical applications."
+            },
+            {
+                "name": "Claude 3 Haiku",
+                "provider": "Anthropic",
+                "use_cases": ["Chatbot"],
+                "context_length": 200000,
+                "cost": { "input": 0.25, "output": 1.25 },
+                "notes": "The fastest and most compact model in the Claude 3 family, ideal for instant-response applications."
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modelsGrid = document.getElementById('models-grid');
+            const searchInput = document.getElementById('search');
+            const providerFilter = document.getElementById('provider-filter');
+            const useCaseFiltersContainer = document.getElementById('use-case-filters');
+            const resetBtn = document.getElementById('reset-filters');
+            const noResultsMessage = document.getElementById('no-results');
+
+            let providers = [...new Set(aiModelsData.map(model => model.provider))];
+            let useCases = [...new Set(aiModelsData.flatMap(model => model.use_cases))];
+
+            let contextChart;
+
+            function setupFilters() {
+                providers.forEach(provider => {
+                    const option = document.createElement('option');
+                    option.value = provider;
+                    option.textContent = provider;
+                    providerFilter.appendChild(option);
+                });
+
+                useCases.forEach(useCase => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `uc-${useCase}`;
+                    checkbox.value = useCase;
+                    checkbox.className = 'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500';
+                    const label = document.createElement('label');
+                    label.htmlFor = `uc-${useCase}`;
+                    label.textContent = useCase;
+                    label.className = 'ml-2 block text-sm text-gray-900';
+                    div.appendChild(checkbox);
+                    div.appendChild(label);
+                    useCaseFiltersContainer.appendChild(div);
+                });
+            }
+
+            function renderModels(models) {
+                modelsGrid.innerHTML = '';
+                if(models.length === 0){
+                    noResultsMessage.classList.remove('hidden');
+                } else {
+                    noResultsMessage.classList.add('hidden');
+                }
+                models.forEach(model => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col transition hover:shadow-lg hover:-translate-y-1';
+                    
+                    const useCasesHtml = model.use_cases.map(uc => `<span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full">${uc}</span>`).join('');
+
+                    card.innerHTML = `
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-bold text-gray-900">${model.name}</h3>
+                                <span class="text-sm font-semibold text-gray-500">${model.provider}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2 mb-4">${model.notes}</p>
+                            <div class="flex flex-wrap">
+                                ${useCasesHtml}
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Context Window:</span>
+                                <span class="font-semibold text-gray-800">${model.context_length.toLocaleString()} tokens</span>
+                            </div>
+                            <div class="flex justify-between text-sm mt-1">
+                                <span class="text-gray-500">Cost (per 1M tokens):</span>
+                                <span class="font-semibold text-gray-800">$${model.cost.input.toFixed(2)} (in) / $${model.cost.output.toFixed(2)} (out)</span>
+                            </div>
+                        </div>
+                    `;
+                    modelsGrid.appendChild(card);
+                });
+            }
+            
+            function filterAndRender() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedProvider = providerFilter.value;
+                const selectedUseCases = Array.from(useCaseFiltersContainer.querySelectorAll('input:checked')).map(cb => cb.value);
+
+                const filteredModels = aiModelsData.filter(model => {
+                    const nameMatch = model.name.toLowerCase().includes(searchTerm);
+                    const providerMatch = !selectedProvider || model.provider === selectedProvider;
+                    const useCaseMatch = selectedUseCases.length === 0 || selectedUseCases.every(uc => model.use_cases.includes(uc));
+                    return nameMatch && providerMatch && useCaseMatch;
+                });
+
+                renderModels(filteredModels);
+                updateChart(filteredModels);
+            }
+
+            function setupChart() {
+                const ctx = document.getElementById('contextChart').getContext('2d');
+                contextChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Context Length (Tokens)',
+                            data: [],
+                            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        if (value >= 1000000) return (value / 1000000) + 'M';
+                                        if (value >= 1000) return (value / 1000) + 'K';
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x.toLocaleString() + ' tokens';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChart(models) {
+                const sortedModels = [...models].sort((a,b) => a.context_length - b.context_length);
+                contextChart.data.labels = sortedModels.map(m => m.name);
+                contextChart.data.datasets[0].data = sortedModels.map(m => m.context_length);
+                contextChart.update();
+            }
+
+            function resetAll() {
+                searchInput.value = '';
+                providerFilter.value = '';
+                useCaseFiltersContainer.querySelectorAll('input:checked').forEach(cb => cb.checked = false);
+                filterAndRender();
+            }
+
+            searchInput.addEventListener('input', filterAndRender);
+            providerFilter.addEventListener('change', filterAndRender);
+            useCaseFiltersContainer.addEventListener('change', filterAndRender);
+            resetBtn.addEventListener('click', resetAll);
+
+            setupFilters();
+            setupChart();
+            filterAndRender();
+        });
+    </script>
 </body>
 </html>
+
