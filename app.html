@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophie.AI Hub - AI Model Index</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #111111;
+            --container-color: #1a1a1a;
+            --border-color: #2d2d2d;
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --accent-primary: #818CF8;
+            --accent-secondary: #A78BFA;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+        }
+
+        /* --- Base & Layout --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* --- Header --- */
+        .app-header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .app-header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--text-primary);
+        }
+        .app-header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+        }
+
+        /* --- Search & Filter Controls --- */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .search-input, .filter-select {
+            padding: 0.75rem 1rem;
+            background-color: var(--container-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+        .search-input {
+            flex-grow: 1;
+        }
+        .search-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        /* --- Model Grid --- */
+        #model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .model-card {
+            background-color: var(--container-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .model-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+        .card-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .card-header h2 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+        .card-header .provider {
+            color: var(--accent-secondary);
+            font-weight: 500;
+        }
+        .card-body p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .tag {
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .card-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .card-footer a {
+            background-color: var(--accent-primary);
+            color: #111;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            text-align: center;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+        .card-footer a:hover {
+            background-color: var(--accent-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="app-header">
+            <h1>Sophie.AI HUB</h1>
+            <p>Your central hub for exploring, comparing, and interacting with AI models and services across various providers.</p>
+        </header>
+
+        <div class="controls">
+            <input type="text" id="search-input" class="search-input" placeholder="Search models by name, provider, or use case...">
+            <select id="filter-provider" class="filter-select">
+                <option value="">All Providers</option>
+                <!-- Options will be populated by JS -->
+            </select>
+            <select id="filter-usecase" class="filter-select">
+                <option value="">All Use Cases</option>
+                <!-- Options will be populated by JS -->
+            </select>
+        </div>
+
+        <main id="model-grid">
+            <!-- AI Model cards will be injected here by JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        // --- 1. The Initial Dataset (ai_models.json) ---
+        const aiModels = [
+            {
+                "id": 1,
+                "name": "GPT-4 Turbo",
+                "provider": "OpenAI",
+                "version": "gpt-4-turbo-2024-04-09",
+                "description": "Large multimodal model with a 128K context window, excelling at complex reasoning, code generation, and following nuanced instructions.",
+                "use_cases": ["Code Generation", "Complex Reasoning", "Chat", "Vision"],
+                "context_length": "128,000 tokens",
+                "cost": "Varies",
+                "licensing": "Proprietary",
+                "access_url": "https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4"
+            },
+            {
+                "id": 2,
+                "name": "Claude 3 Opus",
+                "provider": "Anthropic",
+                "version": "claude-3-opus-20240229",
+                "description": "Anthropic's most powerful model, delivering state-of-the-art performance on highly complex tasks and demonstrating fluency near human levels.",
+                "use_cases": ["Research", "Strategy", "Complex Reasoning", "Chat"],
+                "context_length": "200,000 tokens",
+                "cost": "Varies",
+                "licensing": "Proprietary",
+                "access_url": "https://www.anthropic.com/news/claude-3-family"
+            },
+            {
+                "id": 3,
+                "name": "Gemini 1.5 Pro",
+                "provider": "Google",
+                "version": "1.5 Pro",
+                "description": "A highly capable mid-size multimodal model with a breakthrough 1 million token context window, ideal for long-context understanding and analysis.",
+                "use_cases": ["Long-Context", "Video Analysis", "Code Generation", "Vision"],
+                "context_length": "1,000,000 tokens",
+                "cost": "Varies",
+                "licensing": "Proprietary",
+                "access_url": "https://ai.google.dev/docs/gemini_api_overview"
+            },
+            {
+                "id": 4,
+                "name": "Llama 3 70B",
+                "provider": "Meta",
+                "version": "70B Instruct",
+                "description": "A powerful, open-weights large language model designed for a wide range of applications, with strong performance in reasoning and instruction following.",
+                "use_cases": ["Chat", "Open Source", "Code Generation", "Research"],
+                "context_length": "8,000 tokens",
+                "cost": "Free (weights)",
+                "licensing": "Llama 3 License",
+                "access_url": "https://llama.meta.com/llama3/"
+            },
+            {
+                "id": 5,
+                "name": "Claude 3 Sonnet",
+                "provider": "Anthropic",
+                "version": "claude-3-sonnet-20240229",
+                "description": "An ideal balance of intelligence and speed, designed for enterprise workloads and scaled AI deployments. Strong at knowledge retrieval and automation.",
+                "use_cases": ["Enterprise", "Chat", "Data Processing"],
+                "context_length": "200,000 tokens",
+                "cost": "Varies",
+                "licensing": "Proprietary",
+                "access_url": "https://www.anthropic.com/news/claude-3-family"
+            },
+            {
+                "id": 6,
+                "name": "DALL-E 3",
+                "provider": "OpenAI",
+                "version": "3",
+                "description": "An AI system that can create realistic images and art from a description in natural language. Integrated with ChatGPT for prompt enhancement.",
+                "use_cases": ["Image Generation", "Art", "Vision"],
+                "context_length": "N/A (Text-to-Image)",
+                "cost": "Varies",
+                "licensing": "Proprietary",
+                "access_url": "https://openai.com/dall-e-3"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('model-grid');
+            const searchInput = document.getElementById('search-input');
+            const providerFilter = document.getElementById('filter-provider');
+            const useCaseFilter = document.getElementById('filter-usecase');
+
+            // --- 2. Populate Filters Dynamically ---
+            function populateFilters() {
+                const providers = [...new Set(aiModels.map(model => model.provider))];
+                const useCases = [...new Set(aiModels.flatMap(model => model.use_cases))];
+
+                providers.sort().forEach(provider => {
+                    const option = document.createElement('option');
+                    option.value = provider;
+                    option.textContent = provider;
+                    providerFilter.appendChild(option);
+                });
+
+                useCases.sort().forEach(useCase => {
+                    const option = document.createElement('option');
+                    option.value = useCase;
+                    option.textContent = useCase;
+                    useCaseFilter.appendChild(option);
+                });
+            }
+
+            // --- 3. Render Model Cards ---
+            function renderModels(models) {
+                grid.innerHTML = '';
+                if (models.length === 0) {
+                    grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1 / -1; text-align: center;">No models match your criteria.</p>`;
+                    return;
+                }
+                models.forEach(model => {
+                    const card = document.createElement('div');
+                    card.className = 'model-card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h2>${model.name}</h2>
+                            <span class="provider">${model.provider}</span>
+                        </div>
+                        <div class="card-body">
+                            <p>${model.description}</p>
+                            <div class="card-tags">
+                                ${model.use_cases.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="${model.access_url}" target="_blank" rel="noopener noreferrer">Access Docs</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // --- 4. Filter and Search Logic ---
+            function filterAndRender() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedProvider = providerFilter.value;
+                const selectedUseCase = useCaseFilter.value;
+
+                let filteredModels = aiModels.filter(model => {
+                    const matchesSearch = searchTerm === '' ||
+                        model.name.toLowerCase().includes(searchTerm) ||
+                        model.provider.toLowerCase().includes(searchTerm) ||
+                        model.description.toLowerCase().includes(searchTerm) ||
+                        model.use_cases.some(uc => uc.toLowerCase().includes(searchTerm));
+                    
+                    const matchesProvider = selectedProvider === '' || model.provider === selectedProvider;
+                    const matchesUseCase = selectedUseCase === '' || model.use_cases.includes(selectedUseCase);
+
+                    return matchesSearch && matchesProvider && matchesUseCase;
+                });
+
+                renderModels(filteredModels);
+            }
+
+            // --- 5. Event Listeners ---
+            searchInput.addEventListener('input', filterAndRender);
+            providerFilter.addEventListener('change', filterAndRender);
+            useCaseFilter.addEventListener('change', filterAndRender);
+
+            // --- Initial Load ---
+            populateFilters();
+            renderModels(aiModels);
+        });
+    </script>
+</body>
+</html>
