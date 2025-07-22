@@ -27,6 +27,7 @@
             color: var(--foreground);
             font-family: var(--font-body);
             line-height: 1.6;
+            overflow: hidden; /* Prevent body scroll due to glitter */
         }
         h1, h2, h3 {
             font-family: var(--font-heading);
@@ -42,6 +43,9 @@
             cursor: pointer;
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 2px 4px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
+            display: inline-flex; /* For spinner alignment */
+            align-items: center;
+            justify-content: center;
         }
         button:hover {
             background-color: var(--hover-background);
@@ -137,22 +141,99 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Provider Badges */
-        .provider-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 3rem;
-            height: 3rem;
+        /* Glitter effect */
+        .glitter-particle {
+            position: fixed;
+            background-color: var(--accent-primary);
             border-radius: 50%;
+            opacity: 0;
+            animation: glitter-fade-out 0.8s forwards;
+            pointer-events: none; /* Allow clicks to pass through */
+            z-index: 9999;
+        }
+        @keyframes glitter-fade-out {
+            0% {
+                transform: scale(0) translate(-50%, -50%);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1) translate(-50%, -50%);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0.2) translate(-50%, -50%);
+                opacity: 0;
+            }
+        }
+
+        /* Provider Bars */
+        .provider-bar {
             background-color: var(--card-background);
             border: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 4px 8px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--foreground);
         }
-        .provider-badge img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
+        .provider-bar:hover {
+            transform: translateY(-5px);
+            border-color: var(--foreground);
+            box-shadow: 0 8px 16px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
+        }
+
+        /* Chat specific styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px; /* Fixed height for chat window */
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            background-color: var(--card-background);
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-message {
+            max-width: 80%;
+            padding: 0.6rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+        .chat-message.user {
+            align-self: flex-end;
+            background-color: var(--accent-primary);
+            color: var(--foreground);
+            border-bottom-right-radius: 0;
+        }
+        .chat-message.ai {
+            align-self: flex-start;
+            background-color: var(--hover-background);
+            color: var(--foreground);
+            border-bottom-left-radius: 0;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--background);
+        }
+        .chat-input-area input {
+            flex-grow: 1;
+            margin-right: 0.5rem;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -173,7 +254,7 @@
 
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-background border-r border-border-color p-4 flex flex-col">
+        <aside class="w-64 bg-background border-r border-border-color p-4 flex flex-col flex-shrink-0">
             <h1 class="text-2xl font-bold mb-8">
                 <span style="color: var(--accent-primary);">S</span>ophie<span style="color: var(--accent-secondary);">AI</span>
             </h1>
@@ -183,7 +264,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main id="main-content" class="flex-1 p-8 overflow-y-auto">
+        <main id="main-content" class="flex-1 p-4 md:p-8 overflow-y-auto">
             <!-- Content will be dynamically rendered here -->
         </main>
     </div>
@@ -282,29 +363,31 @@
 
                 if (currentState.workspace === 'home') {
                     mainContent.innerHTML = `
-                        <h1 class="text-5xl font-extrabold text-center mb-6">This is SophieAI - Welcome! <span role="img" aria-label="hugging face emoji">🤗</span></h1>
-                        <p class="text-lg text-center text-gray-400 max-w-2xl mx-auto mb-12">Your central hub for exploring, comparing, and interacting with AI models and services across various providers.</p>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-6">This is SophieAI - Welcome! <span role="img" aria-label="hugging face emoji">🤗</span></h1>
+                        <p class="text-base md:text-lg text-center text-gray-400 max-w-2xl mx-auto mb-12">Your central hub for exploring, comparing, and interacting with AI models and services across various providers.</p>
 
-                        <h2 class="text-2xl font-bold text-center mb-6">Try these prompt ideas:</h2>
-                        <div class="flex flex-wrap justify-center gap-4 mb-12">
+                        <h2 class="text-xl md:text-2xl font-bold text-center mb-6">Try these prompt ideas:</h2>
+                        <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-12">
                             ${promptIdeas.map(idea => `
                                 <div class="prompt-bubble" data-prompt="${idea}">${idea}</div>
                             `).join('')}
                         </div>
 
-                        <div class="flex flex-col items-center mb-12">
-                            <input type="text" id="main-prompt-input" placeholder="What'cha thinkin today? 😈" class="w-full max-w-xl p-4 text-lg rounded-full bg-card-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground shadow-lg">
-                            <button id="main-prompt-submit" class="mt-6 px-8 py-3 bg-accent-primary text-foreground rounded-full text-lg font-bold hover:bg-accent-secondary transition-colors shadow-lg">Ask Sophie</button>
+                        <div class="flex flex-col items-center mb-12 px-4">
+                            <input type="text" id="main-prompt-input" placeholder="What'cha thinkin today? 😈" class="w-full max-w-xl p-3 md:p-4 text-base md:text-lg rounded-full bg-card-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground shadow-lg">
+                            <button id="main-prompt-submit" class="mt-4 md:mt-6 px-6 py-2 md:px-8 md:py-3 bg-accent-primary text-foreground rounded-full text-base md:text-lg font-bold hover:bg-accent-secondary transition-colors shadow-lg">Ask Sophie</button>
+                            <div id="main-prompt-output" class="mt-6 p-4 w-full max-w-xl bg-card-background border border-border-color rounded-lg whitespace-pre-wrap text-sm text-gray-300 hidden">
+                                Your response will appear here.
+                            </div>
                         </div>
 
-                        <h2 class="text-2xl font-bold text-center mb-6">Explore by Provider:</h2>
-                        <div class="flex justify-center items-center space-x-8 mb-12">
-                            <div class="provider-badge">
-                                <img src="https://placehold.co/48x48/3b82f6/ffffff?text=OAI" alt="OpenAI Logo">
-                            </div>
-                            <div class="provider-badge">
-                                <img src="https://placehold.co/48x48/4285F4/ffffff?text=G" alt="Google Logo">
-                            </div>
+                        <h2 class="text-xl md:text-2xl font-bold text-center mb-6">Explore by Provider:</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto px-4">
+                            ${workspaces.filter(w => w.id !== 'home').map(workspace => `
+                                <div class="provider-bar" data-workspace-id="${workspace.id}">
+                                    ${workspace.name}
+                                </div>
+                            `).join('')}
                         </div>
                     `;
                     // Add event listeners for new home page elements
@@ -315,13 +398,27 @@
                     });
                     document.getElementById('main-prompt-submit').addEventListener('click', async () => {
                         const input = document.getElementById('main-prompt-input');
+                        const output = document.getElementById('main-prompt-output');
                         const prompt = input.value.trim();
-                        if (prompt) {
-                            // In a real app, you'd send this prompt to an LLM or process it.
-                            // For now, just clear the input.
-                            alert(`Sophie is thinking about: "${prompt}"`); // Using alert for demo, replace with proper UI feedback
-                            input.value = '';
+
+                        if (!prompt) {
+                            output.textContent = "Please enter a prompt.";
+                            output.classList.remove('hidden');
+                            return;
                         }
+
+                        output.innerHTML = '<div class="flex items-center justify-center"><div class="spinner mr-2"></div> Generating...</div>';
+                        output.classList.remove('hidden');
+                        const response = await generateTextWithGemini(prompt);
+                        output.textContent = response;
+                        input.value = ''; // Clear input after submission
+                    });
+                    mainContent.querySelectorAll('.provider-bar').forEach(bar => {
+                        bar.addEventListener('click', () => {
+                            currentState.workspace = bar.dataset.workspaceId;
+                            currentState.feature = null;
+                            updateView();
+                        });
                     });
 
                 } else {
@@ -378,6 +475,13 @@
                         <div id="generative-output" class="mt-6 p-4 bg-card-background border border-border-color rounded-lg whitespace-pre-wrap text-sm text-gray-300">
                             Your generated text will appear here.
                         </div>
+
+                        <h3 class="text-2xl font-bold mb-4 mt-8">Text Summarization</h3>
+                        <textarea id="summarize-input" class="w-full p-3 rounded-md bg-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground" rows="6" placeholder="Paste text here to summarize..."></textarea>
+                        <button id="summarize-btn" class="mt-4 px-6 py-2 bg-accent-primary text-foreground rounded-md hover:bg-accent-secondary transition-colors">Summarize Text ✨</button>
+                        <div id="summarize-output" class="mt-6 p-4 bg-card-background border border-border-color rounded-lg whitespace-pre-wrap text-sm text-gray-300">
+                            Your summary will appear here.
+                        </div>
                     `;
                 } else if (feature.id === 'magic-spaces') {
                     featureContentHTML = `
@@ -390,18 +494,33 @@
                     `;
                 } else if (feature.id === 'api-cloud') {
                     featureContentHTML = `
-                        <h3 class="text-2xl font-bold mb-4">API & Cloud Integration</h3>
-                        <p class="text-sm text-gray-400">Learn how to integrate AI models via APIs and deploy them on cloud platforms.</p>
-                        <div class="mt-4 p-4 bg-card-background border border-border-color rounded-lg">
-                            <p>Content on API documentation, cloud deployment strategies, and best practices for ${workspace.name} goes here.</p>
+                        <h3 class="text-2xl font-bold mb-4">API Integration Assistant</h3>
+                        <p class="text-sm text-gray-400 mb-4">Describe the API or task you need help with, and SophieAI will generate a code snippet or explanation.</p>
+                        <textarea id="api-input" class="w-full p-3 rounded-md bg-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground" rows="6" placeholder="e.g., 'Python code to call a REST API with authentication', or 'Explain OAuth 2.0 flow for a web app'..."></textarea>
+                        <button id="generate-api-btn" class="mt-4 px-6 py-2 bg-accent-primary text-foreground rounded-md hover:bg-accent-secondary transition-colors">Generate Snippet/Explanation ✨</button>
+                        <div id="api-output" class="mt-6 p-4 bg-card-background border border-border-color rounded-lg whitespace-pre-wrap text-sm text-gray-300">
+                            Your generated content will appear here.
                         </div>
                     `;
                 } else if (feature.id === 'agentic-tech') {
                     featureContentHTML = `
-                        <h3 class="text-2xl font-bold mb-4">Agentic Technology</h3>
-                        <p class="text-sm text-gray-400">Explore the world of AI agents, autonomous systems, and their potential.</p>
-                        <div class="mt-4 p-4 bg-card-background border border-border-color rounded-lg">
-                            <p>Content on agentic frameworks, use cases, and future trends for ${workspace.name} goes here.</p>
+                        <h3 class="text-2xl font-bold mb-4">Agentic Concept Explainer</h3>
+                        <p class="text-sm text-gray-400 mb-4">Enter an agentic technology concept, and SophieAI will provide a clear explanation.</p>
+                        <input type="text" id="agentic-input" class="w-full p-3 rounded-md bg-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground" placeholder="e.g., 'Reinforcement Learning in Agents', 'Multi-agent Systems', 'Agent Memory'..."></input>
+                        <button id="explain-agentic-btn" class="mt-4 px-6 py-2 bg-accent-primary text-foreground rounded-md hover:bg-accent-secondary transition-colors">Explain Concept ✨</button>
+                        <div id="agentic-output" class="mt-6 p-4 bg-card-background border border-border-color rounded-lg whitespace-pre-wrap text-sm text-gray-300">
+                            The explanation will appear here.
+                        </div>
+
+                        <h3 class="text-2xl font-bold mb-4 mt-8">Simple Agent Chat</h3>
+                        <div class="chat-container">
+                            <div id="chat-messages" class="chat-messages">
+                                <div class="chat-message ai">Hello! How can I assist you with agentic tech today?</div>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="chat-input" placeholder="Type your message..." class="p-3 rounded-md bg-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground">
+                                <button id="send-chat-btn" class="px-4 py-2 bg-accent-primary text-foreground rounded-md hover:bg-accent-secondary transition-colors">Send</button>
+                            </div>
                         </div>
                     `;
                 }
@@ -425,6 +544,9 @@
                     const generateBtn = document.getElementById('generate-btn');
                     const generativeInput = document.getElementById('generative-input');
                     const generativeOutput = document.getElementById('generative-output');
+                    const summarizeBtn = document.getElementById('summarize-btn');
+                    const summarizeInput = document.getElementById('summarize-input');
+                    const summarizeOutput = document.getElementById('summarize-output');
 
                     generateBtn.addEventListener('click', async () => {
                         const prompt = generativeInput.value.trim();
@@ -436,6 +558,18 @@
                         const response = await generateTextWithGemini(prompt);
                         generativeOutput.textContent = response;
                     });
+
+                    summarizeBtn.addEventListener('click', async () => {
+                        const textToSummarize = summarizeInput.value.trim();
+                        if (!textToSummarize) {
+                            summarizeOutput.textContent = "Please paste text to summarize.";
+                            return;
+                        }
+                        summarizeOutput.innerHTML = '<div class="flex items-center justify-center"><div class="spinner mr-2"></div> Summarizing...</div>';
+                        const response = await generateTextWithGemini(`Summarize the following text concisely: ${textToSummarize}`);
+                        summarizeOutput.textContent = response;
+                    });
+
                 } else if (feature.id === 'magic-spaces') {
                     const getIdeasBtn = document.getElementById('get-ideas-btn');
                     const magicIdeasOutput = document.getElementById('magic-ideas-output');
@@ -446,6 +580,74 @@
                         const response = await generateTextWithGemini(prompt);
                         magicIdeasOutput.innerHTML = response.split('\n').map(item => item.trim()).filter(item => item.startsWith('1.') || item.startsWith('2.') || item.startsWith('3.') || item.startsWith('4.') || item.startsWith('5.')).length > 0 ? `<ul>${response.split('\n').map(item => item.trim()).filter(item => item.startsWith('1.') || item.startsWith('2.') || item.startsWith('3.') || item.startsWith('4.') || item.startsWith('5.')).map(item => `<li>${item.substring(item.indexOf('.') + 1).trim()}</li>`).join('')}</ul>` : `<p>${response}</p>`;
                     });
+                } else if (feature.id === 'api-cloud') {
+                    const generateApiBtn = document.getElementById('generate-api-btn');
+                    const apiInput = document.getElementById('api-input');
+                    const apiOutput = document.getElementById('api-output');
+
+                    generateApiBtn.addEventListener('click', async () => {
+                        const prompt = apiInput.value.trim();
+                        if (!prompt) {
+                            apiOutput.textContent = "Please enter a description for the API snippet or explanation.";
+                            return;
+                        }
+                        apiOutput.innerHTML = '<div class="flex items-center justify-center"><div class="spinner mr-2"></div> Generating...</div>';
+                        const response = await generateTextWithGemini(`Generate a code snippet or explanation for: ${prompt}. Focus on practical examples.`);
+                        apiOutput.textContent = response;
+                    });
+                } else if (feature.id === 'agentic-tech') {
+                    const explainAgenticBtn = document.getElementById('explain-agentic-btn');
+                    const agenticInput = document.getElementById('agentic-input');
+                    const agenticOutput = document.getElementById('agentic-output');
+                    const chatMessages = document.getElementById('chat-messages');
+                    const chatInput = document.getElementById('chat-input');
+                    const sendChatBtn = document.getElementById('send-chat-btn');
+
+                    explainAgenticBtn.addEventListener('click', async () => {
+                        const prompt = agenticInput.value.trim();
+                        if (!prompt) {
+                            agenticOutput.textContent = "Please enter an agentic concept to explain.";
+                            return;
+                        }
+                        agenticOutput.innerHTML = '<div class="flex items-center justify-center"><div class="spinner mr-2"></div> Explaining...</div>';
+                        const response = await generateTextWithGemini(`Explain the agentic technology concept: "${prompt}" in a clear and concise manner, suitable for someone new to the topic.`);
+                        agenticOutput.textContent = response;
+                    });
+
+                    sendChatBtn.addEventListener('click', async () => {
+                        const userMessage = chatInput.value.trim();
+                        if (!userMessage) return;
+
+                        // Display user message
+                        const userMsgDiv = document.createElement('div');
+                        userMsgDiv.className = 'chat-message user';
+                        userMsgDiv.textContent = userMessage;
+                        chatMessages.appendChild(userMsgDiv);
+                        chatInput.value = '';
+                        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+
+                        // Display loading spinner for AI response
+                        const aiLoadingDiv = document.createElement('div');
+                        aiLoadingDiv.className = 'chat-message ai flex items-center';
+                        aiLoadingDiv.innerHTML = '<div class="spinner mr-2"></div> Thinking...';
+                        chatMessages.appendChild(aiLoadingDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        // Get AI response
+                        const aiPrompt = `You are a helpful AI assistant specializing in agentic technology. Respond concisely to the following user query about agentic tech: "${userMessage}"`;
+                        const aiResponse = await generateTextWithGemini(aiPrompt);
+
+                        // Update AI message
+                        aiLoadingDiv.textContent = aiResponse;
+                        aiLoadingDiv.classList.remove('flex', 'items-center'); // Remove spinner classes
+                        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom again
+                    });
+
+                    chatInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            sendChatBtn.click();
+                        }
+                    });
                 }
             }
 
@@ -455,6 +657,23 @@
 
             // Initial render
             updateView();
+
+            // Glitter effect
+            document.body.addEventListener('click', (e) => {
+                const glitter = document.createElement('div');
+                glitter.className = 'glitter-particle';
+                const size = Math.random() * 8 + 4; // Random size between 4px and 12px
+                glitter.style.width = `${size}px`;
+                glitter.style.height = `${size}px`;
+                glitter.style.left = `${e.clientX}px`;
+                glitter.style.top = `${e.clientY}px`;
+                document.body.appendChild(glitter);
+
+                // Remove the glitter particle after its animation
+                glitter.addEventListener('animationend', () => {
+                    glitter.remove();
+                });
+            });
         });
     </script>
 </body>
