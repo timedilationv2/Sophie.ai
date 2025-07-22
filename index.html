@@ -3,271 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sophie.AI Hub - AI Model Index</title>
-    <!-- Favicon using SVG emoji -->
+    <title>Sophie.AI Hub</title>
     <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><text y='.9em' font-size='90'>🤖</text></svg>">
-
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Google Fonts for consistent visual system -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-
     <style>
-        /* Define consistent visual system variables */
+        /* Chosen Palette: Black and White with subtle purple/blue glossy accents */
         :root {
-            --bg-color: #fdfcfb; /* Light background */
-            --container-color: #ffffff; /* White containers */
-            --border-color: #e5e7eb; /* Light gray border */
-            --text-primary: #1f2937; /* Dark gray text */
-            --text-secondary: #6b7280; /* Muted gray text */
-            --accent-primary: #3b82f6; /* Blue-500 for primary actions */
-            --accent-secondary: #2563eb; /* Blue-600 for hover/active */
+            --background: #0a0a0a; /* Very dark gray/almost black */
+            --foreground: #e0e0e0; /* Light gray for text */
+            --border-color: #2a2a2a; /* Darker gray for borders */
+            --card-background: #1a1a1a; /* Slightly lighter than background for cards */
+            --hover-background: #3a3a3a; /* Darker hover for contrast */
+            --glossy-light: rgba(255, 255, 255, 0.08); /* Subtle white highlight for glossy effect */
+            --glossy-dark: rgba(0, 0, 0, 0.3); /* Subtle black shadow for glossy effect */
+            --accent-primary: #8a2be2; /* BlueViolet - a fun, slightly purple accent */
+            --accent-secondary: #9932cc; /* DarkOrchid - a slightly darker purple for hover */
             --font-heading: 'Space Grotesk', sans-serif;
             --font-body: 'Roboto', sans-serif;
-            --whitespace-section: 2rem; /* 32px */
-            --whitespace-card-gap: 1.5rem; /* 24px */
         }
 
-        /* Base styles */
         body {
+            background-color: var(--background);
+            color: var(--foreground);
             font-family: var(--font-body);
-            background-color: var(--bg-color);
-            color: var(--text-primary);
             line-height: 1.6;
-            scroll-behavior: smooth;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
-
-        /* Headings using Space Grotesk */
-        h1, h2, h3, h4, h5, h6 {
+        h1, h2, h3 {
             font-family: var(--font-heading);
-            color: var(--text-primary);
-        }
-        h1 { font-size: 2.5rem; } /* Adjusted from 2rem to 2.5rem for hero */
-        h2 { font-size: 1.75rem; } /* Adjusted from 1.25rem to 1.75rem for section titles */
-        p { font-size: 1rem; } /* Body text size */
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* General container for main content */
-        .container {
-            max-width: 80rem; /* Tailwind max-w-7xl is 80rem */
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 1rem; /* px-4 */
-            padding-right: 1rem; /* px-4 */
-        }
-        @media (min-width: 640px) { /* sm breakpoint */
-            .container {
-                padding-left: 1.5rem; /* sm:px-6 */
-                padding-right: 1.5rem; /* sm:px-6 */
-            }
-        }
-        @media (min-width: 1024px) { /* lg breakpoint */
-            .container {
-                padding-left: 2rem; /* lg:px-8 */
-                padding-right: 2rem; /* lg:px-8 */
-            }
+            color: var(--foreground);
         }
 
-        /* Spacing for sections */
-        section {
-            padding-top: var(--whitespace-section);
-            padding-bottom: var(--whitespace-section);
-        }
-
-        /* Workspace Card specific styles */
-        .workspace-card {
-            background-color: var(--container-color);
+        /* General button styles */
+        button {
+            background-color: var(--card-background);
             border: 1px solid var(--border-color);
-            border-radius: 0.75rem; /* rounded-xl */
-            padding: 1.5rem; /* p-6 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
-            cursor: pointer;
-        }
-        .workspace-card:hover, .workspace-card:focus-within {
-            transform: translateY(-0.25rem); /* hover:-translate-y-1 */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
-            border-color: var(--accent-primary);
-            outline: none; /* Remove default focus outline */
-        }
-        .workspace-card .logo {
-            width: 3rem; /* h-12 w-12 */
-            height: 3rem;
-            margin-bottom: 1rem; /* mb-4 */
-            border-radius: 0.5rem; /* rounded-lg */
-            background-color: #eff6ff; /* blue-50 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-        }
-        .workspace-card h3 {
-            font-family: var(--font-heading);
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 600; /* font-semibold */
-            margin-bottom: 0.5rem; /* mb-2 */
-            color: var(--text-primary);
-        }
-        .workspace-card p {
-            font-size: 0.875rem; /* text-sm */
-            color: var(--text-secondary);
-        }
-
-        /* How it works section icons */
-        .how-it-works-step .icon {
-            width: 3rem;
-            height: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #e0f2fe; /* blue-100 */
-            border-radius: 9999px; /* rounded-full */
-            font-size: 1.5rem;
-            color: var(--accent-primary);
-            margin-bottom: 0.75rem;
-        }
-
-        /* Chart container */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            max-height: 50vh;
-            background-color: var(--container-color); /* Ensure chart background matches card */
-            border-radius: 0.75rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-        }
-
-        /* Model card specific styles */
-        .model-card {
-            background-color: var(--container-color);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
-            padding: 1.5rem; /* p-6 */
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            cursor: pointer;
-        }
-        .model-card:hover, .model-card:focus-within {
-            transform: translateY(-0.25rem); /* hover:-translate-y-1 */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
-            border-color: var(--accent-primary);
-            outline: none;
-        }
-        .model-card.selected-for-comparison {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* ring-2 ring-blue-500 */
-        }
-        .model-card h3 {
-            font-family: var(--font-heading);
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 700; /* font-bold */
-            color: var(--text-primary);
-        }
-        .model-card .provider-name {
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 600; /* font-semibold */
-            color: var(--text-secondary);
-        }
-        .model-card .notes {
-            font-size: 0.875rem; /* text-sm */
-            color: var(--text-secondary);
-        }
-        .model-card .tag {
-            background-color: #bfdbfe; /* blue-200 */
-            color: #1e40af; /* blue-800 */
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 500; /* font-medium */
-            padding: 0.25rem 0.625rem; /* px-2.5 py-0.5 */
-            border-radius: 9999px; /* rounded-full */
-        }
-        .model-card .detail-label {
-            color: var(--text-secondary);
-        }
-        .model-card .detail-value {
-            font-weight: 600; /* font-semibold */
-            color: var(--text-primary);
-        }
-
-        /* Button styles */
-        .btn-primary {
-            background-color: var(--accent-primary);
-            color: white;
-            font-weight: 700;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border-radius: 0.5rem;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
         }
-        .btn-primary:hover {
-            background-color: var(--accent-secondary);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        button:hover {
+            background-color: var(--hover-background);
+            border-color: var(--foreground);
+            box-shadow: 0 4px 8px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
         }
-        .btn-primary:disabled {
-            background-color: #9ca3af; /* gray-400 */
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .compare-toggle-btn.remove {
-            background-color: #ef4444; /* red-500 */
-        }
-        .compare-toggle-btn.remove:hover {
-            background-color: #dc2626; /* red-600 */
+        button:active {
+            box-shadow: inset 0 2px 4px var(--glossy-dark);
         }
 
-        /* Modal specific styles */
-        #modelModal, #comparisonModal {
-            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
-            z-index: 1000; /* Ensure modals are on top */
+        /* Sidebar navigation links */
+        #sidebar-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--foreground);
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        #modelModal > div, #comparisonModal > div {
-            background-color: var(--container-color);
+        #sidebar-nav a:hover {
+            background-color: var(--hover-background);
+            color: var(--foreground);
+        }
+        #sidebar-nav a.bg-card-background { /* Active state */
+            background-color: var(--card-background);
+            border: 1px solid var(--foreground);
+            box-shadow: 0 0 8px var(--accent-primary);
+        }
+
+        /* Card styles for workspaces and features */
+        .workspace-card, .feature-card {
+            background-color: var(--card-background);
             border: 1px solid var(--border-color);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
-            border-radius: 0.75rem; /* rounded-xl */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 4px 8px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
         }
-        #modelModal h2, #comparisonModal h2 {
-            font-family: var(--font-heading);
-            color: var(--text-primary);
-        }
-        #comparisonContent p {
-            font-size: 1rem; /* Ensure prose content matches body font size */
-            color: var(--text-primary);
-        }
-        #comparisonContent h3 { /* For headings within AI generated content */
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
+        .workspace-card:hover, .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--foreground);
+            box-shadow: 0 8px 16px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
         }
 
-        /* Spinner for loading state */
+        /* Prompt bubbles */
+        .prompt-bubble {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            background: linear-gradient(145deg, var(--card-background), #0a0a0a); /* Subtle gradient */
+            border: 1px solid var(--border-color);
+            color: var(--foreground);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 3px 3px 6px var(--glossy-dark), -3px -3px 6px var(--glossy-light);
+        }
+        .prompt-bubble:hover {
+            transform: scale(1.05);
+            box-shadow: 5px 5px 10px var(--glossy-dark), -5px -5px 10px var(--glossy-light);
+        }
+
+        /* Input field styling */
+        input[type="text"], textarea {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--foreground);
+            padding: 0.75rem 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: inset 0 1px 2px var(--glossy-dark);
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--foreground);
+            box-shadow: 0 0 0 2px var(--accent-primary), inset 0 1px 2px var(--glossy-dark);
+        }
+
+        /* Spinner for loading states */
         .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: var(--accent-primary);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--foreground);
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -278,908 +137,95 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Sticky filter section for persistent navigation */
-        .filter-section {
-            position: sticky;
-            top: var(--whitespace-section); /* Aligns with top padding of main */
-            height: calc(100vh - (2 * var(--whitespace-section))); /* Full viewport height minus top/bottom padding */
-            overflow-y: auto; /* Enable scrolling for filter content */
-        }
-
-        /* Footer styles */
-        .app-footer {
-            background-color: #e5e7eb; /* muted-gray */
-            color: #6b7280; /* text-gray-600 */
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: auto; /* Pushes footer to the bottom */
-            font-size: 0.875rem;
-        }
-
-        /* Magic Spaces specific styles */
-        .magic-space-card {
-            background-color: var(--container-color);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            text-align: left; /* Align text to left for list */
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-        }
-        .magic-space-card:hover, .magic-space-card:focus-within {
-            transform: translateY(-0.25rem);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            border-color: var(--accent-primary);
-            outline: none;
-        }
-        .magic-space-card .logo {
-            width: 3rem; height: 3rem;
-            margin-bottom: 0.75rem; /* Adjusted for left alignment */
-            border-radius: 0.5rem;
-            background-color: #eff6ff;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem;
-            flex-shrink: 0; /* Prevent logo from shrinking */
-        }
-        .magic-space-card h3 {
-            font-family: var(--font-heading);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-        .magic-space-card .blurb {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-        .magic-space-card ul {
-            list-style: none; /* Remove default bullet points */
-            padding: 0;
-            margin: 0;
-            font-size: 0.875rem;
-            color: var(--text-primary);
-        }
-        .magic-space-card ul li {
-            margin-bottom: 0.25rem;
-            display: flex;
+        /* Provider Badges */
+        .provider-badge {
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px var(--glossy-dark), inset 0 1px 0 var(--glossy-light);
         }
-        .magic-space-card ul li::before {
-            content: '✨'; /* Custom bullet point */
-            margin-right: 0.5rem;
-            font-size: 0.75rem;
-            line-height: 1;
+        .provider-badge img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 </head>
-<body class="antialiased">
-    <div id="app" class="min-h-screen flex flex-col">
-        <!-- Header Section -->
-        <header class="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-20">
-            <div class="container py-4">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-gray-800">Sophie.AI Hub</h1>
-                    <p class="text-sm text-gray-500 hidden sm:block">An open hub to discover, compare, and understand AI models.</p>
-                </div>
-            </div>
-        </header>
+<body class="bg-background text-foreground">
+    <!-- Application Structure Plan: The application is structured as a single-page application (SPA) with a fixed sidebar for primary navigation (workspaces) and a main content area for dynamic views. This structure was chosen to mimic a desktop application, providing a persistent navigation experience while allowing flexible content display. Users select a workspace (e.g., OpenAI, Google), which then reveals a dashboard of features (Magic Spaces, API/Cloud, Generative AI, Agentic Tech). Clicking a feature loads its specific dashboard. This hierarchical navigation (Workspace -> Feature -> Dashboard) provides clear user flow and logical grouping of content, making it intuitive to explore different AI aspects. -->
+    <!-- Visualization & Content Choices:
+    - Welcome Section: Goal: Engage & Orient. Presentation: Stylized text, emoji, glossy prompt bubbles, provider badges. Interaction: Clickable prompt bubbles to populate input. Justification: Creates a fun, inviting entry point, offers quick interaction ideas.
+    - Workspace Cards: Goal: Provider Selection. Presentation: Glossy cards with name, blurb. Interaction: Click to navigate to provider's feature dashboard. Justification: Visually distinct, clear call to action, responsive grid for organization.
+    - Feature Cards: Goal: Feature Selection. Presentation: Glossy cards with name, description. Interaction: Click to navigate to specific feature dashboard. Justification: Extends the card-based navigation, keeps options clear.
+    - Generative AI Dashboard: Goal: Text Generation. Presentation: Textarea for input, button, output area. Interaction: User types prompt, clicks generate, AI response displayed. Justification: Direct, functional interaction with LLM.
+    - Magic Spaces Dashboard: Goal: Creative Idea Generation. Presentation: Button, output area. Interaction: Click to get AI-generated ideas. Justification: Showcases creative potential of AI with direct LLM call.
+    - All other dashboards are placeholders for future content.
+    - All interactive elements use CSS transitions for hover/focus states to provide visual feedback.
+    - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
-        <!-- Landing Page Section -->
-        <section id="landing-page" class="flex-grow container flex flex-col justify-center items-center text-center py-8 md:py-16">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">Sophie.AI Hub</h1>
-            <p class="text-lg text-gray-600 mb-8 max-w-2xl">
-                An open hub to discover, compare, and understand AI models.
-            </p>
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-background border-r border-border-color p-4 flex flex-col">
+            <h1 class="text-2xl font-bold mb-8">
+                <span style="color: var(--accent-primary);">S</span>ophie<span style="color: var(--accent-secondary);">AI</span>
+            </h1>
+            <nav id="sidebar-nav" class="flex flex-col space-y-2">
+                <!-- Navigation links will be populated by JS -->
+            </nav>
+        </aside>
 
-            <!-- How it works micro-interaction -->
-            <div class="mb-16 w-full max-w-4xl">
-                <h2 class="text-xl font-semibold text-gray-800 mb-6">How it works:</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="how-it-works-step flex flex-col items-center">
-                        <div class="icon">💡</div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">1. Choose a Workspace</h3>
-                        <p class="text-sm text-gray-600">Select a provider to explore their specific range of AI models.</p>
-                    </div>
-                    <div class="how-it-works-step flex flex-col items-center">
-                        <div class="icon">🔍</div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">2. Explore Models</h3>
-                        <p class="text-sm text-gray-600">Filter and browse models by use case, context length, and cost.</p>
-                    </div>
-                    <div class="how-it-works-step flex flex-col items-center">
-                        <div class="icon">⚖️</div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">3. Compare & Learn</h3>
-                        <p class="text-sm text-gray-600">Get AI-powered comparisons to understand model differences.</p>
-                    </div>
-                </div>
-            </div>
-
-            <h2 class="text-2xl font-bold text-gray-800 mb-8">Choose your workspace</h2>
-            <!-- Workspace Search Input -->
-            <div class="w-full max-w-md mb-8">
-                <input type="text" id="workspace-search" placeholder="Search workspaces..."
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-base text-gray-700">
-            </div>
-
-            <!-- Workspace Cards Grid -->
-            <div id="workspace-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 w-full max-w-4xl">
-                <!-- Workspace cards will be rendered here by JavaScript -->
-            </div>
-            <p id="no-workspace-results" class="text-center text-gray-500 py-8 hidden">No workspaces match your criteria.</p>
-
-            <!-- Sophie.AI Magic Spaces Section -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-16 mb-8">Sophie.AI Magic Spaces</h2>
-            <p class="text-lg text-gray-600 mb-8 max-w-2xl">
-                Unleash your creativity with AI-powered workflows for photo editing, social media, and more!
-            </p>
-            <div id="magic-spaces-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 w-full max-w-4xl">
-                <!-- Magic Space cards will be rendered here by JavaScript -->
-            </div>
-            <p id="no-magic-space-results" class="text-center text-gray-500 py-8 hidden">No magic spaces match your criteria.</p>
-        </section>
-
-        <!-- AI Model Navigator Page (initially hidden) -->
-        <section id="model-navigator-page" class="hidden flex-grow container py-8">
-            <button id="backToWorkspacesBtn" class="btn-primary mb-8 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Back to Workspaces
-            </button>
-
-            <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-8">
-                <!-- Sidebar Filter Section -->
-                <aside class="lg:col-span-1 mb-8 lg:mb-0">
-                    <div class="filter-section">
-                        <div class="p-6 bg-white rounded-xl border border-gray-200 shadow-sm h-full overflow-y-auto">
-                            <h2 class="text-lg font-semibold mb-4 text-gray-800">Explore Models</h2>
-                            <div class="space-y-6">
-                                <!-- Search Input -->
-                                <div>
-                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
-                                    <input type="text" id="search" placeholder="e.g., GPT-4o" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                </div>
-                                <!-- Provider Filter Dropdown (hidden, as we filter by workspace) -->
-                                <div class="hidden">
-                                    <label for="provider-filter" class="block text-sm font-medium text-gray-700 mb-1">Provider</label>
-                                    <select id="provider-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                        <option value="">All Providers</option>
-                                        <!-- Options populated by JS -->
-                                    </select>
-                                </div>
-                                <!-- Use Case Checkboxes -->
-                                <div>
-                                    <h3 class="text-sm font-medium text-gray-700 mb-2">Use Case</h3>
-                                    <div id="use-case-filters" class="space-y-2">
-                                        <!-- Checkboxes populated by JS -->
-                                    </div>
-                                </div>
-                                <!-- Reset Filters Button -->
-                                <div>
-                                    <button id="reset-filters" class="w-full text-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">Reset Filters</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
-                <!-- Main Content Area (Welcome, Chart, Model Grid) -->
-                <div class="lg:col-span-3">
-                    <!-- Welcome Section (can be hidden or adapted for specific provider) -->
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
-                        <h2 id="navigator-welcome-title" class="text-2xl font-bold tracking-tight text-gray-900 mb-2">Explore Models</h2>
-                        <p id="navigator-welcome-text" class="text-gray-600">
-                           Browse and compare AI models from the selected provider. Use the filters on the left to refine your search.
-                        </p>
-                    </div>
-                    <!-- Context Window Chart Section -->
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
-                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Context Window Comparison (Tokens)</h3>
-                         <p class="text-sm text-gray-500 mb-4">This chart visualizes the maximum context window of the currently filtered models. A larger context window allows the model to process and remember more information from a single prompt. This chart updates as you apply filters.</p>
-                        <div class="chart-container">
-                            <canvas id="contextChart"></canvas>
-                        </div>
-                    </div>
-                    <!-- Model Grid -->
-                    <div id="models-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        <!-- Model cards will be rendered here by JavaScript -->
-                    </div>
-                    <!-- No Results Message -->
-                    <p id="no-results" class="text-center text-gray-500 py-12 hidden">No models match your criteria.</p>
-                </div>
-            </div>
-        </section>
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-8 overflow-y-auto">
+            <!-- Content will be dynamically rendered here -->
+        </main>
     </div>
-
-    <!-- Model Detail Modal -->
-    <div id="modelModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 relative m-4">
-            <button id="modalClose" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">✕</button>
-            <h2 id="modalTitle" class="text-3xl font-bold mb-2 text-gray-900"></h2>
-            <p id="modalProvider" class="text-base text-gray-600 mb-4"></p>
-
-            <div class="mb-4 p-4 bg-gray-50 rounded-lg">
-                <h3 class="font-semibold text-lg mb-2 text-gray-800">Benchmarks:</h3>
-                <div id="modalBenchmarks" class="text-sm text-gray-700 space-y-1"></div>
-            </div>
-
-            <div class="mb-4 p-4 bg-gray-50 rounded-lg">
-                <h3 class="font-semibold text-lg mb-2 text-gray-800">Links:</h3>
-                <div id="modalLinks" class="text-sm text-gray-700 space-y-1"></div>
-            </div>
-
-            <div class="text-sm text-gray-500 mt-6 pt-4 border-t border-gray-200">
-                <strong>API Endpoint:</strong> <span id="modalEndpoint"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating Compare Button -->
-    <div id="compareButtonContainer" class="fixed bottom-6 right-6 z-30 hidden">
-        <button id="compareModelsBtn" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed">
-            Compare Selected (<span id="selectedCount">0</span>/2) ✨
-        </button>
-    </div>
-
-    <!-- AI Comparison Modal -->
-    <div id="comparisonModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 relative m-4 max-h-[90vh] overflow-y-auto">
-            <button id="comparisonModalClose" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">✕</button>
-            <h2 class="text-3xl font-bold mb-4 text-gray-900">AI Model Comparison ✨</h2>
-            <div id="comparisonContent" class="prose max-w-none text-gray-800">
-                <div class="flex flex-col items-center justify-center py-10">
-                    <div class="spinner"></div>
-                    <p class="ml-3 text-lg text-gray-600">Generating comparison...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="app-footer">
-        © 2025 Sophie.AI | Built by Arsalan Khan.
-    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DATASETS ---
-            // Workspace Data (Providers)
-            const workspaceData = [
-                {
-                    id: "openai",
-                    name: "OpenAI Workspace",
-                    logo: "https://placehold.co/48x48/3b82f6/ffffff?text=OAI", // Placeholder for OpenAI logo
-                    blurb: "Explore powerful models like GPT and DALL-E for diverse AI applications.",
-                    description: "OpenAI is an AI research and deployment company. Their mission is to ensure that artificial general intelligence benefits all of humanity. They offer a range of advanced models including GPT for language tasks and DALL-E for image generation."
-                },
-                {
-                    id: "google",
-                    name: "Google AI Workspace",
-                    logo: "https://placehold.co/48x48/4285F4/ffffff?text=G", // Placeholder for Google logo
-                    blurb: "Access Google's cutting-edge Gemini models for multimodal and long-context understanding.",
-                    description: "Google AI develops and deploys AI technologies. Their Gemini family of models are designed to be multimodal, highly efficient, and capable of understanding and operating across different types of information, including text, code, audio, image, and video."
-                },
-                {
-                    id: "anthropic",
-                    name: "Anthropic Workspace",
-                    logo: "https://placehold.co/48x48/9333ea/ffffff?text=A", // Placeholder for Anthropic logo
-                    blurb: "Discover Claude models, known for their safety, helpfulness, and advanced reasoning.",
-                    description: "Anthropic is an AI safety and research company. They build reliable, interpretable, and steerable AI systems. Their Claude models are designed to be helpful, honest, and harmless, excelling in complex reasoning and long-context tasks."
-                },
-                {
-                    id: "mistralai",
-                    name: "Mistral AI Workspace",
-                    logo: "https://placehold.co/48x48/f97316/ffffff?text=M", // Placeholder for Mistral AI logo
-                    blurb: "Leverage efficient and powerful open-source models for flexible deployments.",
-                    description: "Mistral AI is a French company focused on developing open-source AI models. They aim to make AI more accessible and efficient, providing powerful models like Mistral 7B and Mixtral 8x7B that are highly performant for their size."
-                },
-                {
-                    id: "perplexity",
-                    name: "Perplexity AI Workspace",
-                    logo: "https://placehold.co/48x48/10b981/ffffff?text=P", // Placeholder for Perplexity AI logo
-                    blurb: "Get instant, cited answers and summaries from a conversational AI search engine.",
-                    description: "Perplexity AI is an answer engine that provides direct answers to questions with sources cited. It combines the power of large language models with real-time web search to deliver accurate and up-to-date information."
-                }
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const mainContent = document.getElementById('main-content');
+
+            const workspaces = [
+                { id: 'home', name: 'Home', description: 'Welcome to Sophie.AI. Select a workspace from the sidebar to get started.' },
+                { id: 'openai', name: 'OpenAI', description: 'Explore OpenAI\'s cutting-edge models for various applications.' },
+                { id: 'google', name: 'Google', description: 'Dive into Google\'s AI offerings, including multimodal and long-context models.' },
+                { id: 'anthropic', name: 'Anthropic', description: 'Discover Anthropic\'s safety-focused Claude models for advanced reasoning.' }
             ];
 
-            // Sophie.AI Magic Spaces Data
-            const magicSpacesData = [
-                {
-                    id: "openai-magic",
-                    name: "OpenAI Magic Space",
-                    logo: "https://placehold.co/48x48/3b82f6/ffffff?text=OAI",
-                    blurb: "Unleash creativity with DALL-E for stunning visuals and unique art.",
-                    workflows: [
-                        "Generate unique profile pictures",
-                        "Create custom Instagram post visuals",
-                        "Design personalized digital art",
-                        "Transform sketches into realistic images",
-                        "Generate fashion design concepts",
-                        "Create whimsical storybook illustrations",
-                        "Produce abstract art for home decor",
-                        "Generate product mockups for e-commerce",
-                        "Develop unique tattoo design ideas"
-                    ]
-                },
-                {
-                    id: "google-magic",
-                    name: "Google AI Magic Space",
-                    logo: "https://placehold.co/48x48/4285F4/ffffff?text=G",
-                    blurb: "Explore multimodal AI from Google for dynamic visual and audio content.",
-                    workflows: [
-                        "Enhance photos with AI filters and styles",
-                        "Create short animated clips from text",
-                        "Generate personalized video backgrounds",
-                        "Design custom emojis and stickers",
-                        "Produce AI-generated music for social media",
-                        "Summarize video content visually",
-                        "Translate text in images instantly",
-                        "Generate virtual try-on experiences",
-                        "Create interactive AR filters"
-                    ]
-                },
-                {
-                    id: "creative-ai-hub",
-                    name: "Creative AI Hub",
-                    logo: "https://placehold.co/48x48/8a2be2/ffffff?text=AI", // Purple placeholder for general Creative AI
-                    blurb: "Dive into advanced image and art generation with cutting-edge open-source models.",
-                    workflows: [
-                        "Generate high-fidelity art prints",
-                        "Create fantasy character designs",
-                        "Develop unique textile patterns",
-                        "Produce concept art for games/films",
-                        "Generate abstract wallpapers",
-                        "Create personalized greeting cards",
-                        "Design unique digital avatars",
-                        "Generate photorealistic landscapes",
-                        "Produce stylized portraits from photos"
-                    ]
-                }
+            const features = [
+                { id: 'magic-spaces', name: 'Magic Spaces', description: 'Unleash your creativity with AI-powered workflows for visual and audio content.' },
+                { id: 'api-cloud', name: 'API/Cloud', description: 'Learn about API integrations, cloud deployment, and infrastructure for AI models.' },
+                { id: 'generative-ai', name: 'Generative AI', description: 'Experiment with text generation, summarization, and creative writing using LLMs.' },
+                { id: 'agentic-tech', name: 'Agentic Tech', description: 'Explore AI agents, autonomous systems, and their applications.' }
             ];
 
-
-            // AI Models Data - Full dataset for the navigator
-            const aiModelsData = [
-                {
-                    id: "gpt-4o", name: "GPT-4o", provider: "OpenAI",
-                    use_cases: ["Chatbot", "Creative Writing", "Code Generation", "Multimodal", "Vision", "Audio"],
-                    context_length: 128000, cost: { input: 5.00, output: 15.00 },
-                    notes: "Flagship multimodal model with vision and audio capabilities. Highly capable across a wide range of tasks.",
-                    benchmarks: { MMLU: "87.2%", HumanEval: "92.5%" },
-                    links: { docs: "https://platform.openai.com/docs/models/gpt-4o", paper: "https://openai.com/index/hello-gpt-4o/", api: "https://platform.openai.com/docs/api-reference/chat" },
-                    api_endpoint: "/v1/chat/completions"
-                },
-                {
-                    id: "claude-3-opus", name: "Claude 3 Opus", provider: "Anthropic",
-                    use_cases: ["Research & Analysis", "Creative Writing", "Chatbot", "Complex Reasoning"],
-                    context_length: 200000, cost: { input: 15.00, output: 75.00 },
-                    notes: "Anthropic's most intelligent model, excelling in complex tasks and demonstrating fluency near human levels.",
-                    benchmarks: { MMLU: "86.8%", HumanEval: "84.9%" },
-                    links: { docs: "https://docs.anthropic.com/claude/docs/models-overview", paper: "https://www.anthropic.com/news/claude-3-family", api: "https://docs.anthropic.com/claude/reference/messages_post" },
-                    api_endpoint: "/v1/messages"
-                },
-                {
-                    id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", provider: "Google",
-                    use_cases: ["Research & Analysis", "Code Generation", "Multimodal", "Video Analysis", "Long-Context"],
-                    context_length: 1000000, cost: { input: 3.50, output: 10.50 },
-                    notes: "Features a massive 1M token context window, making it ideal for long-document analysis and multimodal understanding.",
-                    benchmarks: { MMLU: "88.0%", HumanEval: "90.2%" },
-                    links: { docs: "https://developers.google.com/ai/models", paper: "https://deepmind.google/technologies/gemini/flash-and-pro/", api: "https://developers.google.com/ai/api" },
-                    api_endpoint: "/v1/gemini"
-                },
-                {
-                    id: "mistral-7b", name: "Mistral 7B", provider: "Mistral.ai",
-                    use_cases: ["Lightweight Apps", "Open-Source AI", "Experimentation"],
-                    context_length: 32000, cost: { input: 0.00, output: 0.00 },
-                    notes: "Free, open-weight small model ideal for local deployments and experimentation. Strong performance for its size.",
-                    benchmarks: { MMLU: "75.3%", HumanEval: "60.1%" },
-                    links: { docs: "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2", paper: "https://arxiv.org/abs/2310.06825", api: "https://docs.mistral.ai/" },
-                    api_endpoint: "N/A"
-                },
-                {
-                    id: "perplexity-ai", name: "Perplexity AI", provider: "Perplexity",
-                    use_cases: ["Web Search", "Summarization", "Real-time Information"],
-                    context_length: null, cost: { input: 0.00, output: 0.00 },
-                    notes: "AI-powered search engine with quick summarization capabilities and real-time information retrieval.",
-                    benchmarks: {},
-                    links: { docs: "https://www.perplexity.ai/about", paper: null, api: "https://docs.perplexity.ai/docs" },
-                    api_endpoint: "N/A"
-                },
-                {
-                    id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo", provider: "OpenAI",
-                    use_cases: ["General Text Generation", "Chatbots", "Summarization", "Content Creation"],
-                    context_length: 16385, cost: { input: 0.50, output: 1.50 },
-                    notes: "Cost-effective model, good for many everyday tasks. Offers a balance of capability and speed.",
-                    benchmarks: { MMLU: "70.0%", HumanEval: "48.1%" },
-                    links: { docs: "https://platform.openai.com/docs/models/gpt-3-5", paper: "https://openai.com/blog/chatgpt", api: "https://platform.openai.com/docs/api-reference/chat" },
-                    api_endpoint: "/v1/chat/completions"
-                },
-                {
-                    id: "gpt-4-turbo", name: "GPT-4 Turbo", provider: "OpenAI",
-                    use_cases: ["Code Generation", "Complex Reasoning", "Chat", "Vision", "Advanced Analysis"],
-                    context_length: 128000, cost: { input: 10.00, output: 30.00 },
-                    notes: "Large multimodal model with a 128K context window, excelling at complex reasoning, code generation, and following nuanced instructions.",
-                    benchmarks: { MMLU: "87.0%", HumanEval: "90.0%" },
-                    links: { docs: "https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4", paper: "https://cdn.openai.com/papers/gpt-4.pdf", api: "https://platform.openai.com/docs/api-reference/chat" },
-                    api_endpoint: "/v1/chat/completions"
-                },
-                {
-                    id: "llama-3-70b", name: "Llama 3 70B", provider: "Meta",
-                    use_cases: ["Chat", "Open Source", "Code Generation", "Research", "Fine-tuning"],
-                    context_length: 8000, cost: { input: 0.00, output: 0.00 },
-                    notes: "A powerful, open-weights large language model designed for a wide range of applications, with strong performance in reasoning and instruction following.",
-                    benchmarks: { MMLU: "75.3%", HumanEval: "60.1%" },
-                    links: { docs: "https://llama.meta.com/llama3/", paper: "https://arxiv.org/abs/2404.07143", api: null },
-                    api_endpoint: "N/A"
-                },
-                {
-                    id: "claude-3-sonnet", name: "Claude 3 Sonnet", provider: "Anthropic",
-                    use_cases: ["Enterprise", "Chat", "Data Processing", "Automation"],
-                    context_length: 200000, cost: { input: 3.00, output: 15.00 },
-                    notes: "An ideal balance of intelligence and speed, designed for enterprise workloads and scaled AI deployments. Strong at knowledge retrieval and automation.",
-                    benchmarks: { MMLU: "79.0%", HumanEval: "70.0%" },
-                    links: { docs: "https://docs.anthropic.com/claude/docs/models-overview", paper: "https://www.anthropic.com/news/claude-3-family", api: "https://docs.anthropic.com/claude/reference/messages_post" },
-                    api_endpoint: "/v1/messages"
-                },
-                {
-                    id: "dall-e-3", name: "DALL-E 3", provider: "OpenAI",
-                    use_cases: ["Image Generation", "Art Creation", "Visual Content"],
-                    context_length: null, cost: { input: 0.00, output: 0.00 },
-                    notes: "An AI system that can create realistic images and art from a description in natural language. Integrated with ChatGPT for prompt enhancement.",
-                    benchmarks: {},
-                    links: { docs: "https://platform.openai.com/docs/guides/images/dall-e-3", paper: "https://openai.com/dall-e-3", api: "https://platform.openai.com/docs/api-reference/images" },
-                    api_endpoint: "/v1/images/generations"
-                }
+            const promptIdeas = [
+                "Write a short story about a robot who loves to paint.",
+                "Generate a catchy slogan for a new coffee shop.",
+                "Describe a futuristic city powered by renewable energy.",
+                "Give me ideas for a fantasy creature with unique abilities.",
+                "Explain quantum physics in simple terms.",
+                "Create a poem about a starry night.",
+                "Suggest a healthy meal plan for a week.",
+                "Outline a plot for a detective novel.",
+                "Translate 'Hello, how are you?' into Elvish."
             ];
 
-            // --- DOM Elements ---
-            const landingPage = document.getElementById('landing-page');
-            const modelNavigatorPage = document.getElementById('model-navigator-page');
-            const backToWorkspacesBtn = document.getElementById('backToWorkspacesBtn');
+            let currentState = {
+                workspace: 'home',
+                feature: null
+            };
 
-            // Landing page elements
-            const workspaceGrid = document.getElementById('workspace-grid');
-            const workspaceSearchInput = document.getElementById('workspace-search');
-            const noWorkspaceResultsMessage = document.getElementById('no-workspace-results');
-            const magicSpacesGrid = document.getElementById('magic-spaces-grid');
-            const noMagicSpaceResultsMessage = document.getElementById('no-magic-space-results');
-
-            // Model Navigator elements
-            const modelsGrid = document.getElementById('models-grid');
-            const searchInput = document.getElementById('search');
-            const providerFilter = document.getElementById('provider-filter');
-            const useCaseFiltersContainer = document.getElementById('use-case-filters');
-            const resetBtn = document.getElementById('reset-filters');
-            const noResultsMessage = document.getElementById('no-results');
-            const navigatorWelcomeTitle = document.getElementById('navigator-welcome-title');
-            const navigatorWelcomeText = document.getElementById('navigator-welcome-text');
-
-            // Model Detail Modal elements
-            const modelDetailModal = document.getElementById('modelModal');
-            const modelDetailCloseBtn = document.getElementById('modalClose');
-            const titleEl = document.getElementById('modalTitle');
-            const providerEl = document.getElementById('modalProvider');
-            const benchEl = document.getElementById('modalBenchmarks');
-            const linksEl = document.getElementById('modalLinks');
-            const endpointEl = document.getElementById('modalEndpoint');
-
-            // Comparison Feature elements
-            const compareButtonContainer = document.getElementById('compareButtonContainer');
-            const compareModelsBtn = document.getElementById('compareModelsBtn');
-            const selectedCountSpan = document.getElementById('selectedCount');
-            const comparisonModal = document.getElementById('comparisonModal');
-            const comparisonModalCloseBtn = document.getElementById('comparisonModalClose');
-            const comparisonContent = document.getElementById('comparisonContent');
-
-            let contextChart; // Chart.js instance
-            let selectedModelsForComparison = []; // Array to store IDs of models selected for comparison
-            let currentProviderFilter = ''; // Stores the provider selected from the landing page
-
-            // --- FUNCTIONS ---
-
-            // --- Landing Page Functions ---
-            function renderWorkspaces(workspaces) {
-                workspaceGrid.innerHTML = '';
-                if (workspaces.length === 0) {
-                    noWorkspaceResultsMessage.classList.remove('hidden');
-                } else {
-                    noWorkspaceResultsMessage.classList.add('hidden');
-                }
-
-                workspaces.forEach(ws => {
-                    const card = document.createElement('div');
-                    card.className = 'workspace-card';
-                    card.setAttribute('tabindex', '0'); // Make card focusable
-                    card.innerHTML = `
-                        <div class="logo">
-                            <img src="${ws.logo}" alt="${ws.name} Logo" class="h-full w-full object-contain p-1">
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">${ws.name}</h3>
-                        <p class="text-sm text-gray-600">${ws.blurb}</p>
-                    `;
-                    card.addEventListener('click', () => navigateToModelNavigator(ws.id));
-                    card.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            navigateToModelNavigator(ws.id);
-                        }
-                    });
-                    workspaceGrid.appendChild(card);
-                });
-            }
-
-            function renderMagicSpaces(spaces) {
-                magicSpacesGrid.innerHTML = '';
-                if (spaces.length === 0) {
-                    noMagicSpaceResultsMessage.classList.remove('hidden');
-                } else {
-                    noMagicSpaceResultsMessage.classList.add('hidden');
-                }
-
-                spaces.forEach(space => {
-                    const card = document.createElement('div');
-                    card.className = 'magic-space-card';
-                    card.setAttribute('tabindex', '0'); // Make card focusable
-                    const workflowList = space.workflows.map(wf => `<li>${wf}</li>`).join('');
-
-                    card.innerHTML = `
-                        <div class="flex items-center mb-4">
-                            <div class="logo mr-4">
-                                <img src="${space.logo}" alt="${space.name} Logo" class="h-full w-full object-contain p-1">
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold">${space.name}</h3>
-                                <p class="blurb text-sm">${space.blurb}</p>
-                            </div>
-                        </div>
-                        <h4 class="text-base font-semibold mb-2 text-gray-800">Popular Workflows:</h4>
-                        <ul>${workflowList}</ul>
-                    `;
-                    magicSpacesGrid.appendChild(card);
-                });
-            }
-
-
-            function filterWorkspaces() {
-                const searchTerm = workspaceSearchInput.value.toLowerCase();
-                const filteredWorkspaces = workspaceData.filter(ws =>
-                    ws.name.toLowerCase().includes(searchTerm) ||
-                    ws.blurb.toLowerCase().includes(searchTerm) ||
-                    ws.description.toLowerCase().includes(searchTerm)
-                );
-                renderWorkspaces(filteredWorkspaces);
-            }
-
-            function navigateToModelNavigator(providerId = '') {
-                landingPage.classList.add('hidden');
-                modelNavigatorPage.classList.remove('hidden');
-                currentProviderFilter = providerId; // Set the filter for the navigator page
-
-                // Update welcome message based on selected provider
-                const selectedWorkspace = workspaceData.find(ws => ws.id === providerId);
-                if (selectedWorkspace) {
-                    navigatorWelcomeTitle.textContent = `Explore ${selectedWorkspace.name} Models`;
-                    navigatorWelcomeText.textContent = selectedWorkspace.description;
-                } else {
-                    navigatorWelcomeTitle.textContent = `Explore All Models`;
-                    navigatorWelcomeText.textContent = `Browse and compare AI models from various providers. Use the filters on the left to refine your search.`;
-                }
-
-                // Reset filters and apply the new provider filter
-                searchInput.value = '';
-                providerFilter.value = providerId; // Set the hidden provider filter
-                useCaseFiltersContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                selectedModelsForComparison = []; // Clear comparison selection when changing workspace
-
-                filterAndRenderModels(); // Render models for the selected provider
-            }
-
-            function navigateToLandingPage() {
-                modelNavigatorPage.classList.add('hidden');
-                landingPage.classList.remove('hidden');
-                workspaceSearchInput.value = ''; // Clear workspace search
-                filterWorkspaces(); // Re-render all workspaces
-            }
-
-            // --- Model Navigator Functions ---
-            function setupModelFilters() {
-                // Populate Use Case Checkboxes for the Model Navigator
-                const useCases = [...new Set(aiModelsData.flatMap(m => m.use_cases))].sort();
-                useCases.forEach(uc => {
-                    let div = document.createElement('div');
-                    div.className = 'flex items-center';
-                    let cb = document.createElement('input');
-                    cb.type = 'checkbox';
-                    cb.id = `uc-${uc.replace(/\s/g, '-')}`; // Sanitize ID for spaces
-                    cb.value = uc;
-                    cb.className = 'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500';
-                    let lbl = document.createElement('label');
-                    lbl.htmlFor = `uc-${uc.replace(/\s/g, '-')}`;
-                    lbl.textContent = uc;
-                    lbl.className = 'ml-2 block text-sm text-gray-900';
-                    div.appendChild(cb);
-                    div.appendChild(lbl);
-                    useCaseFiltersContainer.appendChild(div);
-                });
-            }
-
-            function renderModels(models) {
-                modelsGrid.innerHTML = '';
-                if (models.length === 0) {
-                    noResultsMessage.classList.remove('hidden');
-                } else {
-                    noResultsMessage.classList.add('hidden');
-                }
-
-                models.forEach(model => {
-                    const card = document.createElement('div');
-                    const isSelected = selectedModelsForComparison.includes(model.id);
-                    card.className = `model-card ${isSelected ? 'selected-for-comparison' : ''}`;
-                    card.setAttribute('tabindex', '0'); // Make card focusable
-
-                    const useHtml = model.use_cases.map(uc =>
-                        `<span class="tag">${uc}</span>`
-                    ).join('');
-
-                    card.innerHTML = `
-                        <div class="flex-grow" role="button" aria-label="View details for ${model.name}">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold">${model.name}</h3>
-                                <span class="provider-name">${model.provider}</span>
-                            </div>
-                            <p class="notes mb-4">${model.notes || 'No description available.'}</p>
-                            <div class="flex flex-wrap gap-2 mb-4">${useHtml}</div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-200">
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="detail-label">Context Window:</span>
-                                <span class="detail-value">${model.context_length?.toLocaleString() || 'N/A'} tokens</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="detail-label">Cost (per 1M tokens):</span>
-                                <span class="detail-value">
-                                    ${model.cost && model.cost.input !== undefined && model.cost.output !== undefined
-                                        ? `$${model.cost.input.toFixed(2)} (in) / $${model.cost.output.toFixed(2)} (out)`
-                                        : 'N/A'
-                                    }
-                                </span>
-                            </div>
-                        </div>
-                        <button class="compare-toggle-btn mt-4 w-full text-center px-4 py-2 rounded-lg transition btn-primary
-                            ${isSelected ? 'remove' : ''}" data-model-id="${model.id}">
-                            ${isSelected ? 'Remove from Compare' : 'Add to Compare'}
-                        </button>
-                    `;
-                    // Attach click listener to open the model detail modal (on the main card content)
-                    card.querySelector('.flex-grow').addEventListener('click', (e) => {
-                        openModelDetail(model.id);
-                    });
-                     card.querySelector('.flex-grow').addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            openModelDetail(model.id);
-                        }
-                    });
-
-                    // Attach click listener for the compare toggle button
-                    card.querySelector('.compare-toggle-btn').addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent card click event from firing
-                        toggleModelForComparison(model.id);
-                    });
-                    modelsGrid.appendChild(card);
-                });
-                updateCompareButtonState(); // Update the floating compare button state after rendering
-            }
-
-            function filterAndRenderModels() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const selectedProvider = currentProviderFilter; // Use the provider from workspace selection
-                const selectedUseCases = Array.from(useCaseFiltersContainer.querySelectorAll('input:checked'))
-                                            .map(cb => cb.value);
-
-                let filteredModels = aiModelsData.filter(model => {
-                    const matchesSearch = searchTerm === '' ||
-                        model.name.toLowerCase().includes(searchTerm) ||
-                        model.provider.toLowerCase().includes(searchTerm) ||
-                        (model.notes && model.notes.toLowerCase().includes(searchTerm)) ||
-                        model.use_cases.some(uc => uc.toLowerCase().includes(searchTerm));
-
-                    const matchesProvider = selectedProvider === '' || model.provider.toLowerCase() === selectedProvider.toLowerCase();
-
-                    const matchesUseCases = selectedUseCases.length === 0 ||
-                                            selectedUseCases.every(selectedUc => model.use_cases.includes(selectedUc));
-
-                    return matchesSearch && matchesProvider && matchesUseCases;
-                });
-
-                renderModels(filteredModels);
-                updateChart(filteredModels);
-            }
-
-            // --- Chart.js Setup and Update ---
-            function setupChart() {
-                const ctx = document.getElementById('contextChart').getContext('2d');
-                contextChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Context Length (Tokens)',
-                            data: [],
-                            backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                            borderColor: 'rgba(59, 130, 246, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return `${context.dataset.label || ''}: ${context.parsed.x.toLocaleString()} tokens`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                title: { display: true, text: 'Context Length (Tokens)', color: '#4B5563' },
-                                ticks: {
-                                    callback: function(value) {
-                                        if (value >= 1000000) return (value / 1000000) + 'M';
-                                        if (value >= 1000) return (value / 1000) + 'K';
-                                        return value;
-                                    },
-                                    color: '#4B5563'
-                                },
-                                grid: { color: '#E5E7EB' }
-                            },
-                            y: {
-                                title: { display: false },
-                                ticks: { color: '#4B5563' },
-                                grid: { display: false }
-                            }
-                        }
-                    }
-                });
-            }
-
-            function updateChart(data) {
-                const chartData = data.filter(m => m.context_length !== null && typeof m.context_length === 'number');
-                const sorted = [...chartData].sort((a, b) => a.context_length - b.context_length);
-
-                contextChart.data.labels = sorted.map(m => m.name);
-                contextChart.data.datasets[0].data = sorted.map(m => m.context_length);
-                contextChart.update();
-            }
-
-            // --- Model Detail Modal Logic ---
-            function openModelDetail(id) {
-                const model = aiModelsData.find(x => x.id === id);
-                if (!model) {
-                    console.error(`Model with ID "${id}" not found.`);
-                    return;
-                }
-
-                titleEl.textContent = model.name;
-                providerEl.textContent = `Provider: ${model.provider}`;
-
-                if (model.benchmarks && Object.keys(model.benchmarks).length > 0) {
-                    benchEl.innerHTML = Object.entries(model.benchmarks)
-                        .map(([k, v]) => `<p><strong>${k}:</strong> ${v}</p>`)
-                        .join('');
-                } else {
-                    benchEl.innerHTML = '<p class="text-gray-500">No benchmark data available.</p>';
-                }
-
-                if (model.links && Object.keys(model.links).length > 0) {
-                    linksEl.innerHTML = `
-                        ${model.links.docs ? `<p><strong>Docs:</strong> <a href="${model.links.docs}" target="_blank" class="text-blue-600 hover:underline">${model.links.docs}</a></p>` : ''}
-                        ${model.links.paper ? `<p><strong>Paper/Announcement:</strong> <a href="${model.links.paper}" target="_blank" class="text-blue-600 hover:underline">${model.links.paper}</a></p>` : ''}
-                        ${model.links.api ? `<p><strong>API Reference:</strong> <a href="${model.links.api}" target="_blank" class="text-blue-600 hover:underline">${model.links.api}</a></p>` : ''}
-                    `;
-                } else {
-                    linksEl.innerHTML = '<p class="text-gray-500">No links available.</p>';
-                }
-
-                endpointEl.textContent = model.api_endpoint || 'N/A';
-
-                modelDetailModal.classList.remove('hidden');
-                modelDetailModal.classList.add('flex');
-            }
-
-            // --- Comparison Feature Logic ---
-            function toggleModelForComparison(modelId) {
-                const index = selectedModelsForComparison.indexOf(modelId);
-                if (index > -1) {
-                    selectedModelsForComparison.splice(index, 1);
-                } else {
-                    if (selectedModelsForComparison.length < 2) {
-                        selectedModelsForComparison.push(modelId);
-                    } else {
-                        // Replace the oldest selected model if a new one is added when two are already selected
-                        selectedModelsForComparison.shift(); // Remove the first element
-                        selectedModelsForComparison.push(modelId); // Add the new element
-                    }
-                }
-                filterAndRenderModels(); // Re-render models to update card styles and button text
-                updateCompareButtonState();
-            }
-
-            function updateCompareButtonState() {
-                selectedCountSpan.textContent = selectedModelsForComparison.length;
-                if (selectedModelsForComparison.length > 0) {
-                    compareButtonContainer.classList.remove('hidden');
-                } else {
-                    compareButtonContainer.classList.add('hidden');
-                }
-
-                if (selectedModelsForComparison.length === 2) {
-                    compareModelsBtn.disabled = false;
-                    compareModelsBtn.classList.remove('bg-gray-400', 'hover:bg-gray-500');
-                    compareModelsBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                } else {
-                    compareModelsBtn.disabled = true;
-                    compareModelsBtn.classList.add('bg-gray-400', 'hover:bg-gray-500');
-                    compareModelsBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                }
-            }
-
-            async function generateComparison() {
-                if (selectedModelsForComparison.length !== 2) {
-                    console.error("Please select exactly two models for comparison.");
-                    return;
-                }
-
-                const model1 = aiModelsData.find(m => m.id === selectedModelsForComparison[0]);
-                const model2 = aiModelsData.find(m => m.id === selectedModelsForComparison[1]);
-
-                if (!model1 || !model2) {
-                    console.error("Selected models not found in data.");
-                    return;
-                }
-
-                // Show comparison modal and loading spinner
-                comparisonModal.classList.remove('hidden');
-                comparisonModal.classList.add('flex');
-                comparisonContent.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-10">
-                        <div class="spinner mb-4"></div>
-                        <p class="text-lg text-gray-600">Generating comparison for ${model1.name} and ${model2.name}...</p>
-                        <p class="text-sm text-gray-500 mt-2">This may take a few moments.</p>
-                    </div>
-                `;
-
-                const prompt = `
-                    Compare and contrast the following two AI models in detail. Focus on their strengths, weaknesses, ideal use cases, and key differences based on the provided data. Structure your response with clear headings for each model and a dedicated section for comparison. Use markdown for formatting.
-
-                    Model 1:
-                    Name: ${model1.name}
-                    Provider: ${model1.provider}
-                    Use Cases: ${model1.use_cases.join(', ')}
-                    Context Length: ${model1.context_length?.toLocaleString() || 'N/A'} tokens
-                    Cost (per 1M tokens): Input $${model1.cost.input.toFixed(2)}, Output $${model1.cost.output.toFixed(2)}
-                    Notes: ${model1.notes}
-                    Benchmarks: ${Object.entries(model1.benchmarks).map(([k, v]) => `${k}: ${v}`).join(', ') || 'N/A'}
-
-                    Model 2:
-                    Name: ${model2.name}
-                    Provider: ${model2.provider}
-                    Use Cases: ${model2.use_cases.join(', ')}
-                    Context Length: ${model2.context_length?.toLocaleString() || 'N/A'} tokens
-                    Cost (per 1M tokens): Input $${model2.cost.input.toFixed(2)}, Output $${model2.cost.output.toFixed(2)}
-                    Notes: ${model2.notes}
-                    Benchmarks: ${Object.entries(model2.benchmarks).map(([k, v]) => `${k}: ${v}`).join(', ') || 'N/A'}
-
-                    Provide a comprehensive comparison.
-                `;
-
+            // Function to call Gemini API
+            async function generateTextWithGemini(prompt) {
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                 const payload = { contents: chatHistory };
@@ -1197,79 +243,218 @@
                     if (result.candidates && result.candidates.length > 0 &&
                         result.candidates[0].content && result.candidates[0].content.parts &&
                         result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        // Simple markdown-like rendering for headings and lists
-                        let formattedText = text.replace(/^### (.*)$/gm, '<h3 class="text-2xl font-bold mt-6 mb-3">$1</h3>')
-                                                .replace(/^## (.*)$/gm, '<h2 class="text-xl font-bold mt-5 mb-2">$1</h2>')
-                                                .replace(/^# (.*)$/gm, '<h1 class="text-3xl font-bold mt-8 mb-4">$1</h1>')
-                                                .replace(/^\* (.*)$/gm, '<li>$1</li>')
-                                                .replace(/^- (.*)$/gm, '<li>$1</li>');
-                        formattedText = formattedText.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>'); // Wrap lists
-                        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
-                        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Italic
-
-                        comparisonContent.innerHTML = `<div class="prose max-w-none">${formattedText}</div>`;
+                        return result.candidates[0].content.parts[0].text;
                     } else {
-                        comparisonContent.innerHTML = '<p class="text-red-600">Failed to generate comparison. Please try again.</p>';
                         console.error("Gemini API response structure unexpected:", result);
+                        return "Error: Could not generate response.";
                     }
                 } catch (error) {
-                    comparisonContent.innerHTML = '<p class="text-red-600">Error connecting to the AI. Please check your network and try again.</p>';
                     console.error("Error calling Gemini API:", error);
-                } finally {
-                    selectedModelsForComparison = [];
-                    filterAndRenderModels();
+                    return "Error: Failed to connect to AI. Please check your network.";
                 }
             }
 
-            // --- Event Listeners ---
-            // Landing Page
-            workspaceSearchInput.addEventListener('input', filterWorkspaces);
-            backToWorkspacesBtn.addEventListener('click', navigateToLandingPage);
+            function renderSidebar() {
+                sidebarNav.innerHTML = '';
+                workspaces.forEach(workspace => {
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.textContent = workspace.name;
+                    link.className = `p-2 rounded-md hover:bg-hover-background transition-colors ${currentState.workspace === workspace.id ? 'bg-card-background' : ''}`;
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentState.workspace = workspace.id;
+                        currentState.feature = null;
+                        updateView();
+                    });
+                    sidebarNav.appendChild(link);
+                });
+            }
 
-            // Model Navigator
-            searchInput.addEventListener('input', filterAndRenderModels);
-            useCaseFiltersContainer.addEventListener('change', filterAndRenderModels);
+            function render() {
+                renderSidebar();
+                renderMainContent();
+            }
 
-            resetBtn.addEventListener('click', () => {
-                searchInput.value = '';
-                useCaseFiltersContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                selectedModelsForComparison = [];
-                filterAndRenderModels();
-            });
+            function renderMainContent() {
+                mainContent.innerHTML = '';
+                const currentWorkspace = workspaces.find(w => w.id === currentState.workspace);
 
-            // Modals
-            modelDetailCloseBtn.addEventListener('click', () => {
-                modelDetailModal.classList.add('hidden');
-                modelDetailModal.classList.remove('flex');
-            });
-            modelDetailModal.addEventListener('click', e => {
-                if (e.target === modelDetailModal) {
-                    modelDetailModal.classList.add('hidden');
-                    modelDetailModal.classList.remove('flex');
+                if (currentState.workspace === 'home') {
+                    mainContent.innerHTML = `
+                        <h1 class="text-5xl font-extrabold text-center mb-6">This is SophieAI - Welcome! <span role="img" aria-label="hugging face emoji">🤗</span></h1>
+                        <p class="text-lg text-center text-gray-400 max-w-2xl mx-auto mb-12">Your central hub for exploring, comparing, and interacting with AI models and services across various providers.</p>
+
+                        <h2 class="text-2xl font-bold text-center mb-6">Try these prompt ideas:</h2>
+                        <div class="flex flex-wrap justify-center gap-4 mb-12">
+                            ${promptIdeas.map(idea => `
+                                <div class="prompt-bubble" data-prompt="${idea}">${idea}</div>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex flex-col items-center mb-12">
+                            <input type="text" id="main-prompt-input" placeholder="What'cha thinkin today? 😈" class="w-full max-w-xl p-4 text-lg rounded-full bg-card-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground shadow-lg">
+                            <button id="main-prompt-submit" class="mt-6 px-8 py-3 bg-accent-primary text-foreground rounded-full text-lg font-bold hover:bg-accent-secondary transition-colors shadow-lg">Ask Sophie</button>
+                        </div>
+
+                        <h2 class="text-2xl font-bold text-center mb-6">Explore by Provider:</h2>
+                        <div class="flex justify-center items-center space-x-8 mb-12">
+                            <div class="provider-badge">
+                                <img src="https://placehold.co/48x48/3b82f6/ffffff?text=OAI" alt="OpenAI Logo">
+                            </div>
+                            <div class="provider-badge">
+                                <img src="https://placehold.co/48x48/4285F4/ffffff?text=G" alt="Google Logo">
+                            </div>
+                        </div>
+                    `;
+                    // Add event listeners for new home page elements
+                    mainContent.querySelectorAll('.prompt-bubble').forEach(bubble => {
+                        bubble.addEventListener('click', () => {
+                            document.getElementById('main-prompt-input').value = bubble.dataset.prompt;
+                        });
+                    });
+                    document.getElementById('main-prompt-submit').addEventListener('click', async () => {
+                        const input = document.getElementById('main-prompt-input');
+                        const prompt = input.value.trim();
+                        if (prompt) {
+                            // In a real app, you'd send this prompt to an LLM or process it.
+                            // For now, just clear the input.
+                            alert(`Sophie is thinking about: "${prompt}"`); // Using alert for demo, replace with proper UI feedback
+                            input.value = '';
+                        }
+                    });
+
+                } else {
+                    if (currentState.feature) {
+                        renderFeatureDashboard();
+                    } else {
+                        renderWorkspaceDashboard();
+                    }
                 }
-            });
+            }
 
-            comparisonModalCloseBtn.addEventListener('click', () => {
-                comparisonModal.classList.add('hidden');
-                comparisonModal.classList.remove('flex');
-            });
-            comparisonModal.addEventListener('click', e => {
-                if (e.target === comparisonModal) {
-                    comparisonModal.classList.add('hidden');
-                    comparisonModal.classList.remove('flex');
+            function renderWorkspaceDashboard() {
+                const workspace = workspaces.find(w => w.id === currentState.workspace);
+                let featureCardsHTML = features.map(feature => `
+                    <div class="feature-card" data-feature-id="${feature.id}">
+                        <h2 class="text-2xl font-bold">${feature.name}</h2>
+                        <p class="mt-2 text-sm text-gray-400">${feature.description}</p>
+                    </div>
+                `).join('');
+
+                mainContent.innerHTML = `
+                    <button id="back-to-home" class="mb-4 p-2 rounded-md hover:bg-hover-background transition-colors">&larr; Back to Home</button>
+                    <h1 class="text-4xl font-bold">${workspace.name} Workspace</h1>
+                    <p class="mt-2 text-lg text-gray-300">${workspace.description}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        ${featureCardsHTML}
+                    </div>
+                `;
+
+                document.getElementById('back-to-home').addEventListener('click', () => {
+                    currentState.workspace = 'home';
+                    currentState.feature = null;
+                    updateView();
+                });
+
+                mainContent.querySelectorAll('.feature-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        currentState.feature = card.dataset.featureId;
+                        updateView();
+                    });
+                });
+            }
+
+            function renderFeatureDashboard() {
+                const workspace = workspaces.find(w => w.id === currentState.workspace);
+                const feature = features.find(f => f.id === currentState.feature);
+
+                let featureContentHTML = '';
+                if (feature.id === 'generative-ai') {
+                    featureContentHTML = `
+                        <h3 class="text-2xl font-bold mb-4">Text Generation</h3>
+                        <textarea id="generative-input" class="w-full p-3 rounded-md bg-background border border-border-color text-foreground placeholder-gray-500 focus:outline-none focus:border-foreground" rows="6" placeholder="Enter your prompt here..."></textarea>
+                        <button id="generate-btn" class="mt-4 px-6 py-2 bg-accent-primary text-foreground rounded-md hover:bg-accent-secondary transition-colors">Generate</button>
+                        <div id="generative-output" class="mt-6 p-4 bg-card-background border border-border-color rounded-lg whitespace-pre-wrap text-sm text-gray-300">
+                            Your generated text will appear here.
+                        </div>
+                    `;
+                } else if (feature.id === 'magic-spaces') {
+                    featureContentHTML = `
+                        <h3 class="text-2xl font-bold mb-4">Creative Workflows</h3>
+                        <p class="text-sm text-gray-400 mb-4">Get AI-powered ideas for creative projects.</p>
+                        <button id="get-ideas-btn" class="px-6 py-2 bg-accent-primary text-foreground rounded-md hover:bg-accent-secondary transition-colors">Get More Creative Ideas ✨</button>
+                        <div id="magic-ideas-output" class="mt-6 p-4 bg-card-background border border-border-color rounded-lg text-sm text-gray-300">
+                            Ideas will appear here.
+                        </div>
+                    `;
+                } else if (feature.id === 'api-cloud') {
+                    featureContentHTML = `
+                        <h3 class="text-2xl font-bold mb-4">API & Cloud Integration</h3>
+                        <p class="text-sm text-gray-400">Learn how to integrate AI models via APIs and deploy them on cloud platforms.</p>
+                        <div class="mt-4 p-4 bg-card-background border border-border-color rounded-lg">
+                            <p>Content on API documentation, cloud deployment strategies, and best practices for ${workspace.name} goes here.</p>
+                        </div>
+                    `;
+                } else if (feature.id === 'agentic-tech') {
+                    featureContentHTML = `
+                        <h3 class="text-2xl font-bold mb-4">Agentic Technology</h3>
+                        <p class="text-sm text-gray-400">Explore the world of AI agents, autonomous systems, and their potential.</p>
+                        <div class="mt-4 p-4 bg-card-background border border-border-color rounded-lg">
+                            <p>Content on agentic frameworks, use cases, and future trends for ${workspace.name} goes here.</p>
+                        </div>
+                    `;
                 }
-            });
 
-            // Compare Models Button
-            compareModelsBtn.addEventListener('click', generateComparison);
+                mainContent.innerHTML = `
+                    <button id="back-to-workspace" class="mb-4 p-2 rounded-md hover:bg-hover-background transition-colors">&larr; Back to ${workspace.name} Workspace</button>
+                    <h1 class="text-4xl font-bold">${feature.name}</h1>
+                    <p class="mt-2 text-lg text-gray-300">${feature.description}</p>
+                    <div class="mt-8 p-6 bg-card-background border border-border-color rounded-lg">
+                        ${featureContentHTML}
+                    </div>
+                `;
 
-            // --- Initial Load ---
-            renderWorkspaces(workspaceData); // Render landing page workspaces
-            renderMagicSpaces(magicSpacesData); // Render magic spaces cards
-            setupModelFilters(); // Setup filters for the model navigator
-            setupChart(); // Initialize the chart (will be updated when navigator is shown)
-            updateCompareButtonState(); // Initialize compare button state
+                document.getElementById('back-to-workspace').addEventListener('click', () => {
+                    currentState.feature = null;
+                    updateView();
+                });
+
+                // Add event listeners for new feature elements
+                if (feature.id === 'generative-ai') {
+                    const generateBtn = document.getElementById('generate-btn');
+                    const generativeInput = document.getElementById('generative-input');
+                    const generativeOutput = document.getElementById('generative-output');
+
+                    generateBtn.addEventListener('click', async () => {
+                        const prompt = generativeInput.value.trim();
+                        if (!prompt) {
+                            generativeOutput.textContent = "Please enter a prompt.";
+                            return;
+                        }
+                        generativeOutput.innerHTML = '<div class="flex items-center justify-center"><div class="spinner mr-2"></div> Generating...</div>';
+                        const response = await generateTextWithGemini(prompt);
+                        generativeOutput.textContent = response;
+                    });
+                } else if (feature.id === 'magic-spaces') {
+                    const getIdeasBtn = document.getElementById('get-ideas-btn');
+                    const magicIdeasOutput = document.getElementById('magic-ideas-output');
+
+                    getIdeasBtn.addEventListener('click', async () => {
+                        magicIdeasOutput.innerHTML = '<div class="flex items-center justify-center"><div class="spinner mr-2"></div> Generating ideas...</div>';
+                        const prompt = `Generate 5 creative, fun, and "girly" ideas for AI workflows related to ${workspace.name}'s magic spaces. Focus on photo editing, social media, or personal creativity. Present them as a numbered list.`;
+                        const response = await generateTextWithGemini(prompt);
+                        magicIdeasOutput.innerHTML = response.split('\n').map(item => item.trim()).filter(item => item.startsWith('1.') || item.startsWith('2.') || item.startsWith('3.') || item.startsWith('4.') || item.startsWith('5.')).length > 0 ? `<ul>${response.split('\n').map(item => item.trim()).filter(item => item.startsWith('1.') || item.startsWith('2.') || item.startsWith('3.') || item.startsWith('4.') || item.startsWith('5.')).map(item => `<li>${item.substring(item.indexOf('.') + 1).trim()}</li>`).join('')}</ul>` : `<p>${response}</p>`;
+                    });
+                }
+            }
+
+            function updateView() {
+                render();
+            }
+
+            // Initial render
+            updateView();
         });
     </script>
 </body>
