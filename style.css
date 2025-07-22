@@ -1,36 +1,235 @@
+/* --- CSS Reset & Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth; /* Smooth Scrolling */
+}
+
+:root {
+    /* Font Variables */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+    
+    /* Color Palette */
+    --bg-color: #111111;
+    --container-color: #1a1a1a;
+    --border-color: #2d2d2d;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --accent-primary: #818CF8;
+    --accent-secondary: #A78BFA;
+    --terminal-text: #4ade80;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #f4f4f4;
-  padding: 2rem;
-  line-height: 1.6;
-  color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-input[type="text"] {
-  padding: 0.6rem;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 1.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* --- Typography & Hierarchy --- */
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    margin-top: 1.5em;
+    line-height: 1.2;
+}
+h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); }
+h2 { font-size: 2.25rem; margin-top: 2em; }
+h3 { font-size: 1.5rem; }
+p { margin-bottom: 1rem; color: var(--text-secondary); }
+
+/* --- Navigation --- */
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+.nav-logo {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+.nav-menu a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--text-primary);
 }
 
-.card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  margin-bottom: 1rem;
+/* --- Hero Section --- */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 85vh;
+    text-align: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+.hero-tagline {
+    font-weight: 700;
+    background: -webkit-linear-gradient(45deg, var(--accent-secondary), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-subtitle {
+    font-size: 1.25rem;
+    max-width: 650px;
+    margin: 1.5rem auto 2.5rem;
+}
+.cta-button {
+    background-color: var(--accent-primary);
+    color: #111;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.cta-button:hover {
+    background-color: var(--accent-secondary);
+    transform: translateY(-4px);
 }
 
-.card h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
+/* --- Dark Mode Polish & Content Flow --- */
+.content-section {
+    background-color: var(--container-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-top: 3rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Subtle container shadows */
 }
+
+/* --- Interactive Elements: Terminal --- */
+.terminal {
+    background-color: #0d0d0d;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    max-width: 700px;
+    margin: 2rem auto;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.terminal-header {
+    background-color: var(--border-color);
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+.terminal-body {
+    padding: 1.5rem;
+    color: var(--terminal-text);
+}
+#typing-effect::after {
+    content: '█';
+    animation: blink 1s step-end infinite; /* Typing cursor animation */
+}
+@keyframes blink {
+    from, to { color: transparent; }
+    50% { color: var(--terminal-text); }
+}
+
+/* --- Content Flow: Collapsible Sections --- */
+details {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 0;
+}
+details:last-of-type { border-bottom: none; }
+summary {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 1.2rem;
+    cursor: pointer;
+    list-style: none; /* Removes default triangle */
+}
+summary::-webkit-details-marker { display: none; } /* Also for Webkit */
+summary::before {
+    content: '+';
+    margin-right: 1rem;
+    display: inline-block;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+details[open] summary::before {
+    transform: rotate(45deg);
+}
+details > div {
+    padding-top: 1rem;
+    padding-left: 2rem;
+}
+
+/* --- Footer --- */
+.site-footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+.site-footer p { margin-bottom: 0.5rem; }
+.site-footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.site-footer a:hover { color: var(--text-primary); }
+
+/* --- Animations: Scroll Reveal --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Mobile Optimization --- */
+@media (max-width: 768px) {
+    .container { padding: 0 1rem; }
+    .nav-menu { display: none; } /* On a real site, replace with a hamburger menu */
+    .content-section { padding: 1.5rem; }
+    .hero { min-height: 70vh; }
+}
+

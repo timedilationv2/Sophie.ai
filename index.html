@@ -3,434 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sophie.AI - AI Model Navigator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Meta Tags & Favicon -->
+    <title>Sophie.AI — Your Personal Intelligence Engine</title>
+    <meta name="description" content="An open-source framework for building a self-organizing, self-activating intelligence that lives in your personal computing environment.">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+    <!-- Font Imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Slightly cooler background */
-            color: #1f2937;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            max-height: 50vh;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-        .filter-section {
-            position: sticky;
-            top: 1.5rem; /* Matches main content py-8 */
-            height: calc(100vh - 3rem - 80px); /* Adjusted for header height and padding */
-        }
-        .nav-link {
-            cursor: pointer;
-            @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100;
-        }
-        .nav-link.active {
-            @apply bg-blue-100 text-blue-700;
-        }
-        .model-card {
-            cursor: pointer;
-        }
-        /* Simple spinner for loading state */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3b82f6;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased">
-    <div id="app" class="min-h-screen">
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="nav-logo">Sophie.AI</a>
+            <ul class="nav-menu">
+                <li><a href="#about" class="active">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero container">
+        <div class="hero-content reveal">
+            <h1 class="hero-tagline">Sophie.AI — Your Personal Intelligence Engine</h1>
+            <p class="hero-subtitle">An open-source framework for building a self-organizing, self-activating intelligence that lives in your personal computing environment.</p>
+            <a href="#about" class="cta-button">Explore The Vision</a>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Interactive Terminal -->
+        <div class="terminal reveal">
+            <div class="terminal-header">
+                <span>sophie@localhost:~</span>
+            </div>
+            <div class="terminal-body">
+                <p>> <span id="typing-effect"></span></p>
+            </div>
+        </div>
+
+        <!-- Content Sections -->
+        <section id="about" class="content-section reveal">
+            <h2>The Vision</h2>
+            <p>Sophie.AI is not just another LLM wrapper or a passive chatbot. It's a fundamental reimagining of our relationship with personal computing, designed to be a true intellectual partner.</p>
+            <details open>
+                <summary>A System of Intelligence</summary>
+                <div>
+                  <p>The first core idea is that Sophie is a <strong>SYSTEM</strong> of intelligence, not just a single model. It’s an execution environment designed to orchestrate multiple LLMs, tools, and data sources. It acts as a central nervous system for your digital life, capable of complex reasoning and task execution.</p>
+                </div>
+            </details>
+            <details>
+                <summary>Self-Activating Intelligence</summary>
+                <div>
+                   <p>The second core idea is that the system can <strong>activate itself</strong>. Instead of waiting for a prompt, Sophie runs in the background, observing your context (open applications, files, calendar) and proactively taking actions to assist you. It anticipates needs and offers help before you even ask.</p>
+                </div>
+            </details>
+        </section>
+
+        <section id="features" class="content-section reveal">
+            <h2>Core Features</h2>
+            <details>
+                <summary>Execution System</summary>
+                <div>
+                  <p>Sophie is designed as an execution system. This means it has the built-in capability to perform actions on your computer, such as running scripts, managing files, and interacting with applications. Security is paramount, with a permission-based model ensuring you are always in control.</p>
+                </div>
+            </details>
+            <details>
+                <summary>Layered Memory Architecture</summary>
+                <div>
+                  <p>Sophie implements a multi-layered memory system, from short-term "working memory" to a long-term, indexed knowledge base. This allows it to learn from every interaction and build a persistent, evolving understanding of you and your work.</p>
+                </div>
+            </details>
+             <details>
+                <summary>Extensible Tooling</summary>
+                <div>
+                  <p>Integrate any API or CLI tool into Sophie's capabilities. A simple declarative syntax allows you to "teach" Sophie how to use new tools, dramatically expanding its potential for automation and problem-solving.</p>
+                </div>
+            </details>
+        </section>
         
-        <header class="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-800">Sophie.AI</h1>
-                <nav class="flex space-x-4">
-                    <a id="nav-home" class="nav-link active">Home</a>
-                    <a id="nav-models" class="nav-link">Models</a>
-                </nav>
-            </div>
-        </header>
+        <!-- Placeholders for future content -->
+        <div id="roadmap"></div>
+        <div id="contact"></div>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Home Section -->
-            <section id="home-page">
-                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 mb-8">
-                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-3">Welcome to Sophie.AI</h2>
-                    <p class="text-lg text-gray-600 mb-6">
-                        Your central hub for exploring, comparing, and understanding the vast landscape of AI models. My goal is to make complex information accessible and inspire your next big idea.
-                    </p>
-                    <button id="go-to-models-btn" class="inline-block bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                        Explore Models
-                    </button>
-                </div>
-            </section>
+    </main>
 
-            <!-- Models List/Grid View -->
-            <div id="models-list-view" class="hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-8">
-                    <aside class="lg:col-span-1 mb-8 lg:mb-0">
-                        <div class="filter-section">
-                            <div class="p-6 bg-white rounded-xl border border-gray-200 shadow-sm h-full overflow-y-auto">
-                                <h2 class="text-lg font-semibold mb-4">Explore Models</h2>
-                                <div class="space-y-6">
-                                    <div>
-                                        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
-                                        <input type="text" id="search" placeholder="e.g., GPT-4o" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                    </div>
-                                    <div>
-                                        <label for="provider-filter" class="block text-sm font-medium text-gray-700 mb-1">Provider</label>
-                                        <select id="provider-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                            <option value="">All Providers</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-medium text-gray-700 mb-2">Use Case</h3>
-                                        <div id="use-case-filters" class="space-y-2"></div>
-                                    </div>
-                                    <div>
-                                        <button id="reset-filters" class="w-full text-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">Reset Filters</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
-                    
-                    <div class="lg:col-span-3">
-                        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
-                           <h3 class="text-xl font-semibold text-gray-900 mb-4">Context Window Comparison (Tokens)</h3>
-                           <p class="text-sm text-gray-500 mb-4">This chart visualizes the maximum context window of the currently filtered models. A larger context window allows the model to process and remember more information from a single prompt. This chart updates as you apply filters.</p>
-                            <div class="chart-container">
-                                <canvas id="contextChart"></canvas>
-                            </div>
-                        </div>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2025 Sophie.AI Project | Version 2.0</p>
+        <p>
+            <a href="https://github.com/timedilationv2/sophie-ai" target="_blank" rel="noopener noreferrer">GitHub Repository</a> | 
+            <span>Contact: sophie.ai.project@email.com</span>
+        </p>
+    </footer>
 
-                        <div id="models-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-                         <p id="no-results" class="text-center text-gray-500 py-12 hidden">No models match your criteria.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Model Detail View -->
-            <section id="model-detail-view" class="hidden">
-                <!-- Content will be dynamically inserted here -->
-            </section>
-        </main>
-    </div>
-
-    <script>
-        // --- DATA ---
-        const aiModelsData = [
-            { "id": "gpt-4o", "name": "GPT-4o", "provider": "OpenAI", "use_cases": ["Chatbot", "Creative Writing", "Code Generation", "Multimodal"], "context_length": 128000, "cost": { "input": 5.00, "output": 15.00 }, "multimodal": true, "benchmarks": { "MMLU": "88.7%", "HumanEval": "90.2%" }, "docs_url": "https://openai.com/index/hello-gpt-4o/", "notes": "Flagship multimodal model with vision capabilities. Highly capable across a wide range of tasks." },
-            { "id": "claude-3-opus", "name": "Claude 3 Opus", "provider": "Anthropic", "use_cases": ["Research & Analysis", "Creative Writing", "Chatbot"], "context_length": 200000, "cost": { "input": 15.00, "output": 75.00 }, "multimodal": true, "benchmarks": { "MMLU": "86.8%", "HumanEval": "84.9%" }, "docs_url": "https://www.anthropic.com/news/claude-3-family", "notes": "Top-tier model known for its deep reasoning, analysis, and large context window." },
-            { "id": "gemini-1.5-pro", "name": "Gemini 1.5 Pro", "provider": "Google", "use_cases": ["Research & Analysis", "Code Generation", "Multimodal"], "context_length": 1000000, "cost": { "input": 3.50, "output": 10.50 }, "multimodal": true, "benchmarks": { "MMLU": "85.9%", "HumanEval": "74.4%" }, "docs_url": "https://deepmind.google/technologies/gemini/family/", "notes": "Features a massive 1M token context window, making it ideal for long-document analysis." },
-            { "id": "claude-3-sonnet", "name": "Claude 3 Sonnet", "provider": "Anthropic", "use_cases": ["Chatbot", "Code Generation"], "context_length": 200000, "cost": { "input": 3.00, "output": 15.00 }, "multimodal": true, "benchmarks": { "MMLU": "79.0%", "HumanEval": "73.0%" }, "docs_url": "https://www.anthropic.com/news/claude-3-family", "notes": "A balanced model offering a blend of performance and speed, suitable for enterprise workloads." },
-            { "id": "llama-3-70b", "name": "Llama 3 70B", "provider": "Meta", "use_cases": ["Chatbot", "Creative Writing"], "context_length": 8192, "cost": { "input": 0.59, "output": 0.79 }, "multimodal": false, "benchmarks": { "MMLU": "82.0%", "HumanEval": "81.7%" }, "docs_url": "https://ai.meta.com/blog/meta-llama-3/", "notes": "High-performing open-source model, great for fine-tuning and custom deployments." },
-            { "id": "gpt-4-turbo", "name": "GPT-4 Turbo", "provider": "OpenAI", "use_cases": ["Code Generation", "Research & Analysis", "Chatbot"], "context_length": 128000, "cost": { "input": 10.00, "output": 30.00 }, "multimodal": true, "benchmarks": { "MMLU": "86.4%", "HumanEval": "84.1%" }, "docs_url": "https://openai.com/blog/new-models-and-developer-products-announced-at-devday", "notes": "Optimized for performance and lower cost than the original GPT-4, with a large context window." },
-            { "id": "gemini-1.5-flash", "name": "Gemini 1.5 Flash", "provider": "Google", "use_cases": ["Chatbot", "Multimodal"], "context_length": 1000000, "cost": { "input": 0.35, "output": 1.05 }, "multimodal": true, "benchmarks": { "MMLU": "78.9%", "HumanEval": "70.1%" }, "docs_url": "https://deepmind.google/technologies/gemini/family/", "notes": "A lighter, faster version of Gemini 1.5 Pro, designed for speed-critical applications." },
-            { "id": "claude-3-haiku", "name": "Claude 3 Haiku", "provider": "Anthropic", "use_cases": ["Chatbot"], "context_length": 200000, "cost": { "input": 0.25, "output": 1.25 }, "multimodal": true, "benchmarks": { "MMLU": "75.2%", "HumanEval": "75.9%" }, "docs_url": "https://www.anthropic.com/news/claude-3-family", "notes": "The fastest and most compact model in the Claude 3 family, ideal for instant-response applications." }
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Elements ---
-            const homePage = document.getElementById('home-page');
-            const modelsListView = document.getElementById('models-list-view');
-            const modelDetailView = document.getElementById('model-detail-view');
-            const navHome = document.getElementById('nav-home');
-            const navModels = document.getElementById('nav-models');
-            const goToModelsBtn = document.getElementById('go-to-models-btn');
-            
-            const modelsGrid = document.getElementById('models-grid');
-            const searchInput = document.getElementById('search');
-            const providerFilter = document.getElementById('provider-filter');
-            const useCaseFiltersContainer = document.getElementById('use-case-filters');
-            const resetBtn = document.getElementById('reset-filters');
-            const noResultsMessage = document.getElementById('no-results');
-
-            // --- App State ---
-            let providers = [...new Set(aiModelsData.map(model => model.provider))];
-            let useCases = [...new Set(aiModelsData.flatMap(model => model.use_cases))];
-            let contextChart;
-            
-            // --- Page Navigation ---
-            function showPage(pageName) {
-                homePage.classList.add('hidden');
-                modelsListView.classList.add('hidden');
-                modelDetailView.classList.add('hidden');
-                navHome.classList.remove('active');
-                navModels.classList.remove('active');
-
-                if (pageName === 'home') {
-                    homePage.classList.remove('hidden');
-                    navHome.classList.add('active');
-                } else if (pageName === 'models') {
-                    modelsListView.classList.remove('hidden');
-                    navModels.classList.add('active');
-                    if (contextChart) contextChart.resize();
-                } else if (pageName === 'detail') {
-                    modelDetailView.classList.remove('hidden');
-                    navModels.classList.add('active');
-                }
-            }
-
-            // --- Gemini API Call ---
-            async function generateIdeasWithGemini(model) {
-                const ideasContainer = document.getElementById('gemini-ideas-container');
-                if (!ideasContainer) return;
-
-                ideasContainer.innerHTML = '<div class="loader"></div>';
-
-                const prompt = `
-                    Based on the AI model ${model.name} from ${model.provider}, which is known for: ${model.use_cases.join(', ')}, and has a context length of ${model.context_length.toLocaleString()} tokens.
-                    
-                    Generate three distinct and creative project ideas that would be a great fit for this specific model. 
-                    
-                    For each idea, provide:
-                    1. A catchy title (using <h4> tags).
-                    2. A brief, one-paragraph description of the project concept.
-                    3. A short "Why this model?" explanation, highlighting why its specific strengths are a good match.
-
-                    Format the entire response using simple HTML paragraph and heading tags. Do not include \`\`\`html or any other code block markers.
-                `;
-
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API request failed with status ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                    if (result.candidates && result.candidates.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        ideasContainer.innerHTML = text;
-                    } else {
-                         throw new Error("No content received from API.");
-                    }
-
-                } catch (error) {
-                    console.error("Gemini API call failed:", error);
-                    ideasContainer.innerHTML = `<p class="text-red-600">Sorry, we couldn't generate ideas at this time. Please try again later.</p>`;
-                }
-            }
-
-            // --- Rendering Functions ---
-            function renderDetailPage(modelId) {
-                const model = aiModelsData.find(m => m.id === modelId);
-                if (!model) return;
-
-                const benchmarksHtml = Object.entries(model.benchmarks)
-                    .map(([key, value]) => `<div class="flex justify-between"><span class="text-gray-500">${key}:</span><span class="font-semibold text-gray-800">${value}</span></div>`)
-                    .join('');
-
-                modelDetailView.innerHTML = `
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
-                        <button id="back-to-models-btn" class="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                            Back to Models
-                        </button>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="md:col-span-2">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h2 class="text-4xl font-bold text-gray-900">${model.name}</h2>
-                                    <span class="text-lg font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-lg">${model.provider}</span>
-                                </div>
-                                <p class="text-lg text-gray-600 mt-2 mb-6">${model.notes}</p>
-                                
-                                <div class="mb-6">
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Primary Use Cases</h3>
-                                    <div class="flex flex-wrap gap-2">
-                                        ${model.use_cases.map(uc => `<span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">${uc}</span>`).join('')}
-                                    </div>
-                                </div>
-
-                                <div class="mt-8">
-                                    <h3 class="text-xl font-semibold text-gray-800 mb-4">✨ AI-Powered Project Ideas</h3>
-                                    <p class="text-gray-600 mb-4">Curious what you can build? Click the button below to get some creative ideas generated by Gemini, tailored specifically for this model.</p>
-                                    <button id="generate-ideas-btn" class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold px-5 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-md">
-                                        Generate Project Ideas
-                                    </button>
-                                    <div id="gemini-ideas-container" class="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200 min-h-[100px]">
-                                        <p class="text-gray-500">Your generated ideas will appear here...</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="md:col-span-1">
-                                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 h-full">
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Model Details</h3>
-                                    <div class="space-y-3 text-sm">
-                                        <div class="flex justify-between"><span class="text-gray-500">Context Window:</span><span class="font-semibold text-gray-800">${model.context_length.toLocaleString()} tokens</span></div>
-                                        <div class="flex justify-between"><span class="text-gray-500">Input Cost / 1M:</span><span class="font-semibold text-gray-800">$${model.cost.input.toFixed(2)}</span></div>
-                                        <div class="flex justify-between"><span class="text-gray-500">Output Cost / 1M:</span><span class="font-semibold text-gray-800">$${model.cost.output.toFixed(2)}</span></div>
-                                        <div class="flex justify-between"><span class="text-gray-500">Multimodal:</span><span class="font-semibold text-gray-800">${model.multimodal ? 'Yes' : 'No'}</span></div>
-                                        <div class="pt-3 mt-3 border-t">
-                                            <h4 class="font-semibold text-gray-800 mb-2">Benchmarks</h4>
-                                            ${benchmarksHtml}
-                                        </div>
-                                    </div>
-                                     <a href="${model.docs_url}" target="_blank" rel="noopener noreferrer" class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                        View Docs
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                showPage('detail');
-                
-                // Add event listeners for the new buttons on the detail page
-                document.getElementById('back-to-models-btn').addEventListener('click', () => showPage('models'));
-                document.getElementById('generate-ideas-btn').addEventListener('click', () => generateIdeasWithGemini(model));
-            }
-
-            function renderModels(models) {
-                modelsGrid.innerHTML = '';
-                noResultsMessage.classList.toggle('hidden', models.length > 0);
-
-                models.forEach(model => {
-                    const card = document.createElement('div');
-                    card.className = 'model-card bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col transition hover:shadow-lg hover:-translate-y-1';
-                    card.dataset.modelId = model.id;
-                    
-                    const useCasesHtml = model.use_cases.map(uc => `<span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full">${uc}</span>`).join('');
-
-                    card.innerHTML = `
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-start">
-                                <h3 class="text-lg font-bold text-gray-900">${model.name}</h3>
-                                <span class="text-sm font-semibold text-gray-500">${model.provider}</span>
-                            </div>
-                            <p class="text-sm text-gray-600 mt-2 mb-4">${model.notes}</p>
-                            <div class="flex flex-wrap">
-                                ${useCasesHtml}
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-200">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Context Window:</span>
-                                <span class="font-semibold text-gray-800">${model.context_length.toLocaleString()} tokens</span>
-                            </div>
-                        </div>
-                    `;
-                    card.addEventListener('click', () => renderDetailPage(model.id));
-                    modelsGrid.appendChild(card);
-                });
-            }
-            
-            function filterAndRender() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const selectedProvider = providerFilter.value;
-                const selectedUseCases = Array.from(useCaseFiltersContainer.querySelectorAll('input:checked')).map(cb => cb.value);
-
-                const filteredModels = aiModelsData.filter(model => {
-                    const nameMatch = model.name.toLowerCase().includes(searchTerm);
-                    const providerMatch = !selectedProvider || model.provider === selectedProvider;
-                    const useCaseMatch = selectedUseCases.length === 0 || selectedUseCases.every(uc => model.use_cases.includes(uc));
-                    return nameMatch && providerMatch && useCaseMatch;
-                });
-
-                renderModels(filteredModels);
-                updateChart(filteredModels);
-            }
-
-            function setupChart() {
-                const ctx = document.getElementById('contextChart').getContext('2d');
-                contextChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: { labels: [], datasets: [{ label: 'Context Length (Tokens)', data: [], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }] },
-                    options: {
-                        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                        scales: { x: { beginAtZero: true, ticks: { callback: value => (value >= 1000000 ? `${value / 1000000}M` : value >= 1000 ? `${value / 1000}K` : value) } } },
-                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: context => `${context.dataset.label || ''}: ${context.parsed.x.toLocaleString()} tokens` } } }
-                    }
-                });
-            }
-
-            function updateChart(models) {
-                const sortedModels = [...models].sort((a,b) => a.context_length - b.context_length);
-                contextChart.data.labels = sortedModels.map(m => m.name);
-                contextChart.data.datasets[0].data = sortedModels.map(m => m.context_length);
-                contextChart.update();
-            }
-
-            function setupFilters() {
-                providers.forEach(provider => {
-                    const option = document.createElement('option');
-                    option.value = provider; option.textContent = provider;
-                    providerFilter.appendChild(option);
-                });
-
-                useCases.forEach(useCase => {
-                    const div = document.createElement('div');
-                    div.className = 'flex items-center';
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox'; checkbox.id = `uc-${useCase.replace(/\s/g, '-')}`; checkbox.value = useCase;
-                    checkbox.className = 'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500';
-                    const label = document.createElement('label');
-                    label.htmlFor = checkbox.id; label.textContent = useCase;
-                    label.className = 'ml-2 block text-sm text-gray-900';
-                    div.append(checkbox, label);
-                    useCaseFiltersContainer.appendChild(div);
-                });
-            }
-
-            function resetAll() {
-                searchInput.value = '';
-                providerFilter.value = '';
-                useCaseFiltersContainer.querySelectorAll('input:checked').forEach(cb => cb.checked = false);
-                filterAndRender();
-            }
-
-            // --- Initial Setup & Event Listeners ---
-            navHome.addEventListener('click', () => showPage('home'));
-            navModels.addEventListener('click', () => showPage('models'));
-            goToModelsBtn.addEventListener('click', () => showPage('models'));
-
-            searchInput.addEventListener('input', filterAndRender);
-            providerFilter.addEventListener('change', filterAndRender);
-            useCaseFiltersContainer.addEventListener('change', filterAndRender);
-            resetBtn.addEventListener('click', resetAll);
-
-            setupFilters();
-            setupChart();
-            filterAndRender(); 
-            showPage('home');
-        });
-    </script>
+    <!-- Link to your JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
+
