@@ -3,113 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Meta Tags & Favicon -->
-    <title>Sophie.AI — Your Personal Intelligence Engine</title>
-    <meta name="description" content="An open-source framework for building a self-organizing, self-activating intelligence that lives in your personal computing environment.">
+    <title>Sophie.AI Hub - Navigate the AI Ecosystem</title>
     <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
 
     <!-- Font Imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 
-    <!-- Link to your CSS file -->
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-color: #0d1117; /* GitHub Dark Background */
+            --header-bg: rgba(13, 17, 23, 0.8);
+            --workspace-bg: #161b22; /* Slightly lighter for sections */
+            --card-bg: #21262d; 
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-primary: #58a6ff; /* GitHub Link Blue */
+            --accent-secondary: #a371f7; /* Purple */
+            --font-heading: 'Manrope', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* --- Base & Layout --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            padding: 8rem 0 6rem;
+        }
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text-primary);
+            background: -webkit-linear-gradient(45deg, #a371f7, #58a6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            max-width: 650px;
+            margin: 1.5rem auto 0;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Workspace Navigation --- */
+        .workspace-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 4rem;
+            padding: 0.5rem;
+            background-color: var(--workspace-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .workspace-nav button {
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background-color: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .workspace-nav button:hover {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+        }
+        .workspace-nav button.active {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+        }
+
+        /* --- Workspace Sections --- */
+        .workspace {
+            display: none; /* Hidden by default */
+            padding: 3rem;
+            background-color: var(--workspace-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 4rem;
+        }
+        .workspace.active {
+            display: block; /* Shown when active */
+        }
+        .workspace h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        /* --- Model Grid & Cards --- */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .model-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .model-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .card-header h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+        .provider-badge {
+            height: 24px;
+            width: auto;
+        }
+        .card-body p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .tag {
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* --- Footer --- */
+        .site-footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="#" class="nav-logo">Sophie.AI</a>
-            <ul class="nav-menu">
-                <li><a href="#about" class="active">About</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#roadmap">Roadmap</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="hero container">
-        <div class="hero-content reveal">
-            <h1 class="hero-tagline">Sophie.AI — Your Personal Intelligence Engine</h1>
-            <p class="hero-subtitle">An open-source framework for building a self-organizing, self-activating intelligence that lives in your personal computing environment.</p>
-            <a href="#about" class="cta-button">Explore The Vision</a>
-        </div>
-    </header>
-
     <main class="container">
-
-        <!-- Interactive Terminal -->
-        <div class="terminal reveal">
-            <div class="terminal-header">
-                <span>sophie@localhost:~</span>
-            </div>
-            <div class="terminal-body">
-                <p>> <span id="typing-effect"></span></p>
-            </div>
-        </div>
-
-        <!-- Content Sections -->
-        <section id="about" class="content-section reveal">
-            <h2>The Vision</h2>
-            <p>Sophie.AI is not just another LLM wrapper or a passive chatbot. It's a fundamental reimagining of our relationship with personal computing, designed to be a true intellectual partner.</p>
-            <details open>
-                <summary>A System of Intelligence</summary>
-                <div>
-                  <p>The first core idea is that Sophie is a <strong>SYSTEM</strong> of intelligence, not just a single model. It’s an execution environment designed to orchestrate multiple LLMs, tools, and data sources. It acts as a central nervous system for your digital life, capable of complex reasoning and task execution.</p>
-                </div>
-            </details>
-            <details>
-                <summary>Self-Activating Intelligence</summary>
-                <div>
-                   <p>The second core idea is that the system can <strong>activate itself</strong>. Instead of waiting for a prompt, Sophie runs in the background, observing your context (open applications, files, calendar) and proactively taking actions to assist you. It anticipates needs and offers help before you even ask.</p>
-                </div>
-            </details>
+        <section class="hero">
+            <h1>Navigate the AI Ecosystem</h1>
+            <p>Sophie.AI provides a central hub to discover, compare, and understand AI models from across the industry. Select a workspace to begin.</p>
         </section>
 
-        <section id="features" class="content-section reveal">
-            <h2>Core Features</h2>
-            <details>
-                <summary>Execution System</summary>
-                <div>
-                  <p>Sophie is designed as an execution system. This means it has the built-in capability to perform actions on your computer, such as running scripts, managing files, and interacting with applications. Security is paramount, with a permission-based model ensuring you are always in control.</p>
-                </div>
-            </details>
-            <details>
-                <summary>Layered Memory Architecture</summary>
-                <div>
-                  <p>Sophie implements a multi-layered memory system, from short-term "working memory" to a long-term, indexed knowledge base. This allows it to learn from every interaction and build a persistent, evolving understanding of you and your work.</p>
-                </div>
-            </details>
-             <details>
-                <summary>Extensible Tooling</summary>
-                <div>
-                  <p>Integrate any API or CLI tool into Sophie's capabilities. A simple declarative syntax allows you to "teach" Sophie how to use new tools, dramatically expanding its potential for automation and problem-solving.</p>
-                </div>
-            </details>
-        </section>
-        
-        <!-- Placeholders for future content -->
-        <div id="roadmap"></div>
-        <div id="contact"></div>
+        <nav class="workspace-nav">
+            <button id="btn-google" class="workspace-tab active">
+                <svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Google</title><path d="M12.0001 12.0001L12.0001 11.9999C12.0001 11.9999 12.0001 12.0001 12.0001 12.0001ZM12.0001 4.80005C10.091 4.80005 8.35636 5.86368 7.31818 7.31823L9.09091 8.5455C9.72727 7.68186 10.7727 7.09095 12.0001 7.09095C14.0455 7.09095 15.6818 8.72732 15.6818 10.7728C15.6818 12.8182 14.0455 14.4546 12.0001 14.4546C10.9545 14.4546 10.091 13.9546 9.45455 13.2273L7.68182 14.4546C8.72727 15.7273 10.2818 16.6819 12.0001 16.6819C15.3182 16.6819 18.0001 14.0455 18.0001 10.7728C18.0001 7.45459 15.2727 4.80005 12.0001 4.80005Z"/></svg>
+                Google
+            </button>
+            <button id="btn-openai" class="workspace-tab">
+                <svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>OpenAI</title><path d="M22.288 15.326c-.465-3.387-2.37-6.33-5.18-8.23-2.92-1.96-6.52-2.48-9.94-.46-3.15 1.88-5.32 4.97-6.14 8.3-1.04 4.25.13 8.68 2.94 11.83 2.68 3.03 6.63 4.54 10.56 4.24 4.14-.31 7.85-2.61 9.9-6.02 2.05-3.42 2.43-7.53 1.86-11.66zM8.344 3.973c1.44-.63 2.99-.96 4.56-.96 3.39 0 6.5 1.59 8.52 4.14-1.29-1.29-2.84-2.27-4.56-2.88-1.59-.57-3.29-.81-5.04-.66-1.88.16-3.69.79-5.22 1.86.35-.46.72-.9 1.11-1.32.4-.42.83-.81 1.29-1.17.1-.08.2-.15.3-.21zm-5.4 17.395C1.624 18.27 1.11 14.1 2.1 10.03c.51-2.09 1.63-3.95 3.18-5.37-1.44.92-2.61 2.2-3.42 3.75-.84 1.59-1.29 3.36-1.32 5.19-.03 1.91.3 3.81 1.02 5.58.15.38.32.75.51 1.14zm13.152 2.652c-2.49 1.2-5.29 1.52-7.95.81-2.7-.72-5.05-2.33-6.66-4.59.93 1.41 2.21 2.58 3.75 3.42 1.56.84 3.33 1.29 5.16 1.32 1.88.03 3.75-.3 5.55-1.02.45-.18.89-.4 1.32-.63.2-.12.4-.24.6-.39.1-.08.2-.15.3-.24.02-.02.04-.03.06-.05-.18.12-.36.24-.54.35zm5.01-6.933c-.51 2.09-1.63 3.95-3.18 5.37 1.44-.93 2.61-2.21 3.42-3.75.84-1.59 1.29-3.36 1.32-5.19.03-1.91-.3-3.81-1.02-5.58-.15-.38-.32-.75-.51-1.11-.18-.39-.39-.77-.6-1.14.36.45.71.92 1.02 1.41.32.51.6 1.05.84 1.59.54 1.29.84 2.64.87 4.02.03 1.38-.18 2.76-.63 4.08z"/></svg>
+                OpenAI
+            </button>
+            <button id="btn-meta" class="workspace-tab">
+                <svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Meta</title><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 21.6c-5.302 0-9.6-4.298-9.6-9.6S6.698 2.4 12 2.4s9.6 4.298 9.6 9.6-4.298 9.6-9.6 9.6zM7.23 10.08c0-2.475 2.16-4.47 4.77-4.47 2.61 0 4.77 1.995 4.77 4.47 0 2.475-2.16 4.47-4.77 4.47-2.61 0-4.77-1.995-4.77-4.47zm7.11 0c0-1.282-1.08-2.31-2.34-2.31-1.26 0-2.34 1.028-2.34 2.31 0 1.282 1.08 2.31 2.34 2.31 1.26 0 2.34-1.028 2.34-2.31z"/></svg>
+                Meta
+            </button>
+        </nav>
 
+        <!-- Google Workspace -->
+        <section id="workspace-google" class="workspace active">
+            <h2>Gemini Workspace</h2>
+            <div id="grid-google" class="model-grid"></div>
+        </section>
+
+        <!-- OpenAI Workspace -->
+        <section id="workspace-openai" class="workspace">
+            <h2>OpenAI Workspace</h2>
+            <div id="grid-openai" class="model-grid"></div>
+        </section>
+
+        <!-- Meta Workspace -->
+        <section id="workspace-meta" class="workspace">
+            <h2>Meta Workspace</h2>
+            <div id="grid-meta" class="model-grid"></div>
+        </section>
     </main>
 
-    <!-- Footer -->
     <footer class="site-footer">
-        <p>&copy; 2025 Sophie.AI Project | Version 2.0</p>
-        <p>
-            <a href="https://github.com/timedilationv2/sophie-ai" target="_blank" rel="noopener noreferrer">GitHub Repository</a> | 
-            <span>Contact: sophie.ai.project@email.com</span>
-        </p>
+        <p>&copy; 2025 Sophie.AI | Built by Arsalan Khan</p>
     </footer>
 
-    <!-- Link to your JavaScript file -->
-    <script src="script.js"></script>
+    <script>
+        const aiModels = [
+            { "provider": "Google", "name": "Gemini 1.5 Pro", "description": "A highly capable mid-size multimodal model with a breakthrough 1 million token context window, ideal for long-context understanding and analysis.", "use_cases": ["Long-Context", "Video Analysis", "Code Generation"] },
+            { "provider": "Google", "name": "Gemini 1.5 Flash", "description": "A lighter-weight, faster, and lower-cost model optimized for high-volume, high-frequency tasks where speed is critical.", "use_cases": ["Summarization", "Chat", "Data Extraction"] },
+            { "provider": "OpenAI", "name": "GPT-4o", "description": "The latest flagship model, natively multimodal across text, audio, and vision. Designed for real-time, human-like interaction.", "use_cases": ["Real-time Conversation", "Vision", "Complex Reasoning"] },
+            { "provider": "OpenAI", "name": "DALL-E 3", "description": "An AI system that creates highly detailed images from text descriptions, understanding nuance and complex concepts.", "use_cases": ["Image Generation", "Art", "Creative"] },
+            { "provider": "Meta", "name": "Llama 3 70B", "description": "A powerful, open-weights model designed for a wide range of applications, with strong performance in reasoning and instruction following.", "use_cases": ["Open Source", "Code Generation", "Research"] },
+            { "provider": "Meta", "name": "Llama 3 8B", "description": "A highly efficient and fast open-weights model, perfect for on-device applications, experimentation, and scaled deployments.", "use_cases": ["Open Source", "Chat", "On-Device"] },
+        ];
+
+        const providerBadges = {
+            Google: `<svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Google</title><path d="M12.0001 12.0001L12.0001 11.9999C12.0001 11.9999 12.0001 12.0001 12.0001 12.0001ZM12.0001 4.80005C10.091 4.80005 8.35636 5.86368 7.31818 7.31823L9.09091 8.5455C9.72727 7.68186 10.7727 7.09095 12.0001 7.09095C14.0455 7.09095 15.6818 8.72732 15.6818 10.7728C15.6818 12.8182 14.0455 14.4546 12.0001 14.4546C10.9545 14.4546 10.091 13.9546 9.45455 13.2273L7.68182 14.4546C8.72727 15.7273 10.2818 16.6819 12.0001 16.6819C15.3182 16.6819 18.0001 14.0455 18.0001 10.7728C18.0001 7.45459 15.2727 4.80005 12.0001 4.80005Z"/></svg>`,
+            OpenAI: `<svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>OpenAI</title><path d="M22.288 15.326c-.465-3.387-2.37-6.33-5.18-8.23-2.92-1.96-6.52-2.48-9.94-.46-3.15 1.88-5.32 4.97-6.14 8.3-1.04 4.25.13 8.68 2.94 11.83 2.68 3.03 6.63 4.54 10.56 4.24 4.14-.31 7.85-2.61 9.9-6.02 2.05-3.42 2.43-7.53 1.86-11.66zM8.344 3.973c1.44-.63 2.99-.96 4.56-.96 3.39 0 6.5 1.59 8.52 4.14-1.29-1.29-2.84-2.27-4.56-2.88-1.59-.57-3.29-.81-5.04-.66-1.88.16-3.69.79-5.22 1.86.35-.46.72-.9 1.11-1.32.4-.42.83-.81 1.29-1.17.1-.08.2-.15.3-.21zm-5.4 17.395C1.624 18.27 1.11 14.1 2.1 10.03c.51-2.09 1.63-3.95 3.18-5.37-1.44.92-2.61 2.2-3.42 3.75-.84 1.59-1.29 3.36-1.32 5.19-.03 1.91.3 3.81 1.02 5.58.15.38.32.75.51 1.14zm13.152 2.652c-2.49 1.2-5.29 1.52-7.95.81-2.7-.72-5.05-2.33-6.66-4.59.93 1.41 2.21 2.58 3.75 3.42 1.56.84 3.33 1.29 5.16 1.32 1.88.03 3.75-.3 5.55-1.02.45-.18.89-.4 1.32-.63.2-.12.4-.24.6-.39.1-.08.2-.15.3-.24.02-.02.04-.03.06-.05-.18.12-.36.24-.54.35zm5.01-6.933c-.51 2.09-1.63 3.95-3.18 5.37 1.44-.93 2.61-2.21 3.42-3.75.84-1.59 1.29-3.36 1.32-5.19.03-1.91-.3-3.81-1.02-5.58-.15-.38-.32-.75-.51-1.11-.18-.39-.39-.77-.6-1.14.36.45.71.92 1.02 1.41.32.51.6 1.05.84 1.59.54 1.29.84 2.64.87 4.02.03 1.38-.18 2.76-.63 4.08z"/></svg>`,
+            Meta: `<svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Meta</title><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 21.6c-5.302 0-9.6-4.298-9.6-9.6S6.698 2.4 12 2.4s9.6 4.298 9.6 9.6-4.298 9.6-9.6 9.6zM7.23 10.08c0-2.475 2.16-4.47 4.77-4.47 2.61 0 4.77 1.995 4.77 4.47 0 2.475-2.16 4.47-4.77 4.47-2.61 0-4.77-1.995-4.77-4.47zm7.11 0c0-1.282-1.08-2.31-2.34-2.31-1.26 0-2.34 1.028-2.34 2.31 0 1.282 1.08 2.31 2.34 2.31 1.26 0 2.34-1.028 2.34-2.31z"/></svg>`
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.workspace-tab');
+            const workspaces = document.querySelectorAll('.workspace');
+
+            function renderModels() {
+                // Clear all grids first
+                document.querySelectorAll('.model-grid').forEach(grid => grid.innerHTML = '');
+
+                // Populate each grid
+                aiModels.forEach(model => {
+                    const grid = document.getElementById(`grid-${model.provider.toLowerCase()}`);
+                    if (!grid) return;
+
+                    const card = document.createElement('div');
+                    card.className = 'model-card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3>${model.name}</h3>
+                            ${providerBadges[model.provider] || ''}
+                        </div>
+                        <div class="card-body">
+                            <p>${model.description}</p>
+                        </div>
+                        <div class="card-tags">
+                            ${model.use_cases.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            function switchTab(e) {
+                const targetId = e.currentTarget.id.replace('btn-', '');
+                
+                tabs.forEach(tab => tab.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                
+                workspaces.forEach(ws => {
+                    ws.classList.remove('active');
+                    if (ws.id === `workspace-${targetId}`) {
+                        ws.classList.add('active');
+                    }
+                });
+            }
+            
+            tabs.forEach(tab => tab.addEventListener('click', switchTab));
+
+            // Initial render
+            renderModels();
+        });
+    </script>
 </body>
 </html>
+
 
