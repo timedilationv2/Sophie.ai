@@ -9,21 +9,18 @@
     <!-- Font Imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-color: #0d1117; /* GitHub Dark Background */
-            --header-bg: rgba(13, 17, 23, 0.8);
-            --workspace-bg: #161b22; /* Slightly lighter for sections */
-            --card-bg: #21262d; 
-            --border-color: #30363d;
-            --text-primary: #c9d1d9;
-            --text-secondary: #8b949e;
-            --accent-primary: #58a6ff; /* GitHub Link Blue */
-            --accent-secondary: #a371f7; /* Purple */
-            --font-heading: 'Manrope', sans-serif;
-            --font-body: 'Inter', sans-serif;
+            --bg-color: #000000;
+            --workspace-bg: #0a0a0a;
+            --card-bg: #1a1a1a; 
+            --border-color: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-green: #2ecc71;
+            --font-main: 'Inter', sans-serif;
         }
 
         /* --- Base & Layout --- */
@@ -36,7 +33,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
-            font-family: var(--font-body);
+            font-family: var(--font-main);
             line-height: 1.6;
         }
 
@@ -46,26 +43,50 @@
             padding: 0 2rem;
         }
 
-        /* --- Hero Section --- */
+        /* --- Hero Section & Logo --- */
         .hero {
             text-align: center;
-            padding: 8rem 0 6rem;
+            padding: 6rem 0 4rem;
+        }
+        .sophie-logo {
+            width: 100%;
+            max-width: 120px;
+            height: auto;
+            margin: 0 auto 2rem;
         }
         .hero h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: 2.5rem;
             font-weight: 800;
-            line-height: 1.1;
             color: var(--text-primary);
-            background: -webkit-linear-gradient(45deg, #a371f7, #58a6ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
         }
         .hero p {
             max-width: 650px;
-            margin: 1.5rem auto 0;
+            margin: 0 auto;
             font-size: 1.2rem;
             color: var(--text-secondary);
+        }
+
+        /* --- Search Bar --- */
+        .search-container {
+            margin: 0 auto 4rem;
+            max-width: 700px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background-color: var(--workspace-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-family: var(--font-main);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
         }
 
         /* --- Workspace Navigation --- */
@@ -81,9 +102,10 @@
             max-width: fit-content;
             margin-left: auto;
             margin-right: auto;
+            flex-wrap: wrap;
         }
         .workspace-nav button {
-            font-family: var(--font-body);
+            font-family: var(--font-main);
             font-weight: 500;
             font-size: 1rem;
             padding: 0.75rem 1.5rem;
@@ -93,48 +115,53 @@
             color: var(--text-secondary);
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
         .workspace-nav button:hover {
             background-color: var(--card-bg);
             color: var(--text-primary);
         }
         .workspace-nav button.active {
-            background-color: var(--accent-primary);
-            color: #ffffff;
+            background-color: var(--accent-green);
+            color: #000000;
         }
 
         /* --- Workspace Sections --- */
         .workspace {
-            display: none; /* Hidden by default */
-            padding: 3rem;
+            display: none;
+        }
+        .workspace.active {
+            display: block;
+        }
+        .workspace-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
             background-color: var(--workspace-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            margin-bottom: 4rem;
         }
-        .workspace.active {
-            display: block; /* Shown when active */
-        }
-        .workspace h2 {
-            font-family: var(--font-heading);
+        .workspace-header h2 {
             font-size: 2rem;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .workspace-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         /* --- Model Grid & Cards --- */
         .model-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 1.5rem;
         }
         .model-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
@@ -142,48 +169,51 @@
         }
         .model-card:hover {
             transform: translateY(-5px);
-            border-color: var(--accent-primary);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            border-color: var(--accent-green);
         }
         .card-header h3 {
-            font-family: var(--font-heading);
+            font-weight: 700;
             font-size: 1.25rem;
             color: var(--text-primary);
         }
-        .provider-badge {
-            height: 24px;
-            width: auto;
+        .card-body {
+            margin: 1rem 0;
+            flex-grow: 1;
         }
         .card-body p {
             color: var(--text-secondary);
             font-size: 0.95rem;
-            margin-bottom: 1rem;
-            flex-grow: 1;
+            margin-bottom: 1.5rem;
         }
-        .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
-        .tag {
-            background-color: var(--border-color);
-            color: var(--text-secondary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
+        .info-item {
+            background-color: var(--workspace-bg);
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+        .info-item .label {
             font-size: 0.8rem;
-            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
         }
+        .info-item .value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .info-item .value.paid { color: #f87171; }
+        .info-item .value.free { color: #4ade80; }
+        .info-item .value.open { color: #60a5fa; }
         
         /* --- Footer --- */
         .site-footer {
             text-align: center;
-            padding: 3rem 0;
+            padding: 4rem 0 2rem;
             color: var(--text-secondary);
             font-size: 0.9rem;
             border-top: 1px solid var(--border-color);
@@ -195,41 +225,65 @@
 
     <main class="container">
         <section class="hero">
-            <h1>Navigate the AI Ecosystem</h1>
-            <p>Sophie.AI provides a central hub to discover, compare, and understand AI models from across the industry. Select a workspace to begin.</p>
+            <svg class="sophie-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 10 A 40 40 0 1 0 50 90 A 40 40 0 1 0 50 10 Z" stroke="white" stroke-width="4" fill="none" />
+                <circle cx="50" cy="50" r="25" fill="#2ecc71" />
+                <circle cx="50" cy="50" r="15" fill="black" />
+                <path d="M75 50 L90 50" stroke="white" stroke-width="4" />
+                <path d="M80 40 L90 50 L80 60" stroke="white" stroke-width="4" fill="none" />
+            </svg>
+
+            <h1>sOphieAi /></h1>
+            <p>An open hub to discover, compare, and understand AI models from across the industry. Select a workspace to begin.</p>
         </section>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Search all models...">
+        </div>
 
         <nav class="workspace-nav">
-            <button id="btn-google" class="workspace-tab active">
-                <svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Google</title><path d="M12.0001 12.0001L12.0001 11.9999C12.0001 11.9999 12.0001 12.0001 12.0001 12.0001ZM12.0001 4.80005C10.091 4.80005 8.35636 5.86368 7.31818 7.31823L9.09091 8.5455C9.72727 7.68186 10.7727 7.09095 12.0001 7.09095C14.0455 7.09095 15.6818 8.72732 15.6818 10.7728C15.6818 12.8182 14.0455 14.4546 12.0001 14.4546C10.9545 14.4546 10.091 13.9546 9.45455 13.2273L7.68182 14.4546C8.72727 15.7273 10.2818 16.6819 12.0001 16.6819C15.3182 16.6819 18.0001 14.0455 18.0001 10.7728C18.0001 7.45459 15.2727 4.80005 12.0001 4.80005Z"/></svg>
-                Google
-            </button>
-            <button id="btn-openai" class="workspace-tab">
-                <svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>OpenAI</title><path d="M22.288 15.326c-.465-3.387-2.37-6.33-5.18-8.23-2.92-1.96-6.52-2.48-9.94-.46-3.15 1.88-5.32 4.97-6.14 8.3-1.04 4.25.13 8.68 2.94 11.83 2.68 3.03 6.63 4.54 10.56 4.24 4.14-.31 7.85-2.61 9.9-6.02 2.05-3.42 2.43-7.53 1.86-11.66zM8.344 3.973c1.44-.63 2.99-.96 4.56-.96 3.39 0 6.5 1.59 8.52 4.14-1.29-1.29-2.84-2.27-4.56-2.88-1.59-.57-3.29-.81-5.04-.66-1.88.16-3.69.79-5.22 1.86.35-.46.72-.9 1.11-1.32.4-.42.83-.81 1.29-1.17.1-.08.2-.15.3-.21zm-5.4 17.395C1.624 18.27 1.11 14.1 2.1 10.03c.51-2.09 1.63-3.95 3.18-5.37-1.44.92-2.61 2.2-3.42 3.75-.84 1.59-1.29 3.36-1.32 5.19-.03 1.91.3 3.81 1.02 5.58.15.38.32.75.51 1.14zm13.152 2.652c-2.49 1.2-5.29 1.52-7.95.81-2.7-.72-5.05-2.33-6.66-4.59.93 1.41 2.21 2.58 3.75 3.42 1.56.84 3.33 1.29 5.16 1.32 1.88.03 3.75-.3 5.55-1.02.45-.18.89-.4 1.32-.63.2-.12.4-.24.6-.39.1-.08.2-.15.3-.24.02-.02.04-.03.06-.05-.18.12-.36.24-.54.35zm5.01-6.933c-.51 2.09-1.63 3.95-3.18 5.37 1.44-.93 2.61-2.21 3.42-3.75.84-1.59 1.29-3.36 1.32-5.19.03-1.91-.3-3.81-1.02-5.58-.15-.38-.32-.75-.51-1.11-.18-.39-.39-.77-.6-1.14.36.45.71.92 1.02 1.41.32.51.6 1.05.84 1.59.54 1.29.84 2.64.87 4.02.03 1.38-.18 2.76-.63 4.08z"/></svg>
-                OpenAI
-            </button>
-            <button id="btn-meta" class="workspace-tab">
-                <svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Meta</title><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 21.6c-5.302 0-9.6-4.298-9.6-9.6S6.698 2.4 12 2.4s9.6 4.298 9.6 9.6-4.298 9.6-9.6 9.6zM7.23 10.08c0-2.475 2.16-4.47 4.77-4.47 2.61 0 4.77 1.995 4.77 4.47 0 2.475-2.16 4.47-4.77 4.47-2.61 0-4.77-1.995-4.77-4.47zm7.11 0c0-1.282-1.08-2.31-2.34-2.31-1.26 0-2.34 1.028-2.34 2.31 0 1.282 1.08 2.31 2.34 2.31 1.26 0 2.34-1.028 2.34-2.31z"/></svg>
-                Meta
-            </button>
+            <button id="btn-openai" class="workspace-tab active">OpenAI</button>
+            <button id="btn-anthropic" class="workspace-tab">Anthropic</button>
+            <button id="btn-google" class="workspace-tab">Google</button>
+            <button id="btn-meta" class="workspace-tab">Meta</button>
+            <button id="btn-mistralai" class="workspace-tab">Mistral AI</button>
         </nav>
 
-        <!-- Google Workspace -->
-        <section id="workspace-google" class="workspace active">
-            <h2>Gemini Workspace</h2>
-            <div id="grid-google" class="model-grid"></div>
-        </section>
-
-        <!-- OpenAI Workspace -->
-        <section id="workspace-openai" class="workspace">
-            <h2>OpenAI Workspace</h2>
+        <!-- Workspaces -->
+        <section id="workspace-openai" class="workspace active">
+            <div class="workspace-header">
+                <h2>OpenAI Workspace</h2>
+                <p><span style="color: var(--accent-green); font-weight: bold;">Provider DNA:</span> Best for cutting-edge performance, creative tasks, and general-purpose reasoning.</p>
+            </div>
             <div id="grid-openai" class="model-grid"></div>
         </section>
-
-        <!-- Meta Workspace -->
+        <section id="workspace-anthropic" class="workspace">
+            <div class="workspace-header">
+                <h2>Anthropic Workspace</h2>
+                <p><span style="color: var(--accent-green); font-weight: bold;">Provider DNA:</span> Best for safety, reliability, and handling complex enterprise-level tasks with a constitutional approach.</p>
+            </div>
+            <div id="grid-anthropic" class="model-grid"></div>
+        </section>
+        <section id="workspace-google" class="workspace">
+            <div class="workspace-header">
+                <h2>Google AI Workspace</h2>
+                <p><span style="color: var(--accent-green); font-weight: bold;">Provider DNA:</span> Best for massive context windows, multimodal understanding, and integration with the Google ecosystem.</p>
+            </div>
+            <div id="grid-google" class="model-grid"></div>
+        </section>
         <section id="workspace-meta" class="workspace">
-            <h2>Meta Workspace</h2>
+            <div class="workspace-header">
+                <h2>Meta AI Workspace</h2>
+                <p><span style="color: var(--accent-green); font-weight: bold;">Provider DNA:</span> Best for open-source innovation, community collaboration, and specialized tasks like code generation.</p>
+            </div>
             <div id="grid-meta" class="model-grid"></div>
+        </section>
+        <section id="workspace-mistralai" class="workspace">
+            <div class="workspace-header">
+                <h2>Mistral AI Workspace</h2>
+                <p><span style="color: var(--accent-green); font-weight: bold;">Provider DNA:</span> Best for high-performance open models, multilingual capabilities, and efficient, optimized architectures.</p>
+            </div>
+            <div id="grid-mistralai" class="model-grid"></div>
         </section>
     </main>
 
@@ -239,31 +293,54 @@
 
     <script>
         const aiModels = [
-            { "provider": "Google", "name": "Gemini 1.5 Pro", "description": "A highly capable mid-size multimodal model with a breakthrough 1 million token context window, ideal for long-context understanding and analysis.", "use_cases": ["Long-Context", "Video Analysis", "Code Generation"] },
-            { "provider": "Google", "name": "Gemini 1.5 Flash", "description": "A lighter-weight, faster, and lower-cost model optimized for high-volume, high-frequency tasks where speed is critical.", "use_cases": ["Summarization", "Chat", "Data Extraction"] },
-            { "provider": "OpenAI", "name": "GPT-4o", "description": "The latest flagship model, natively multimodal across text, audio, and vision. Designed for real-time, human-like interaction.", "use_cases": ["Real-time Conversation", "Vision", "Complex Reasoning"] },
-            { "provider": "OpenAI", "name": "DALL-E 3", "description": "An AI system that creates highly detailed images from text descriptions, understanding nuance and complex concepts.", "use_cases": ["Image Generation", "Art", "Creative"] },
-            { "provider": "Meta", "name": "Llama 3 70B", "description": "A powerful, open-weights model designed for a wide range of applications, with strong performance in reasoning and instruction following.", "use_cases": ["Open Source", "Code Generation", "Research"] },
-            { "provider": "Meta", "name": "Llama 3 8B", "description": "A highly efficient and fast open-weights model, perfect for on-device applications, experimentation, and scaled deployments.", "use_cases": ["Open Source", "Chat", "On-Device"] },
+            // OpenAI
+            { "provider": "OpenAI", "name": "GPT-4o", "description": "Flagship multimodal model for real-time, human-like interaction.", "pricing": "Paid", "tokenization": "128K Context", "strengths": "Vision & Voice" },
+            { "provider": "OpenAI", "name": "GPT-4.5 Turbo", "description": "A hypothetical advanced model for complex reasoning and creative tasks.", "pricing": "Paid", "tokenization": "256K Context", "strengths": "Complex Reasoning" },
+            { "provider": "OpenAI", "name": "DALL-E 3", "description": "Creates highly detailed images from text descriptions.", "pricing": "Paid", "tokenization": "N/A", "strengths": "Image Generation" },
+            
+            // Anthropic
+            { "provider": "Anthropic", "name": "Claude 3 Opus", "description": "Top-tier performance on highly complex tasks and analysis.", "pricing": "Paid", "tokenization": "200K Context", "strengths": "Analysis & Research" },
+            { "provider": "Anthropic", "name": "Claude 3 Sonnet", "description": "Balanced model for enterprise workloads and scaled deployments.", "pricing": "Paid", "tokenization": "200K Context", "strengths": "Enterprise Tasks" },
+            { "provider": "Anthropic", "name": "Claude 3 Haiku", "description": "Fastest and most compact model for near-instant responsiveness.", "pricing": "Paid", "tokenization": "200K Context", "strengths": "Speed & Chat" },
+            
+            // Google
+            { "provider": "Google", "name": "Gemini 1.5 Pro", "description": "Highly capable model with a breakthrough 1 million token context window.", "pricing": "Paid", "tokenization": "1M Context", "strengths": "Long-Context Analysis" },
+            { "provider": "Google", "name": "Gemini 1.5 Flash", "description": "Lighter-weight model optimized for high-volume, high-frequency tasks.", "pricing": "Paid", "tokenization": "1M Context", "strengths": "Speed & Volume" },
+            
+            // Meta
+            { "provider": "Meta", "name": "Llama 3 70B", "description": "Powerful open-weights model for a wide range of applications.", "pricing": "Open Source", "tokenization": "8K Context", "strengths": "General Purpose" },
+            { "provider": "Meta", "name": "Code Llama 70B", "description": "Specialized for code generation, supporting languages like Java.", "pricing": "Open Source", "tokenization": "100K Context", "strengths": "Code & Java" },
+            
+            // Mistral AI
+            { "provider": "Mistral AI", "name": "Mistral Large", "description": "Top-tier reasoning for complex multilingual tasks.", "pricing": "Paid", "tokenization": "32K Context", "strengths": "Multilingual" },
+            { "provider": "Mistral AI", "name": "Mistral Small", "description": "Low-latency model perfect for simple tasks that require high throughput.", "pricing": "Paid", "tokenization": "32K Context", "strengths": "High Throughput" },
         ];
-
-        const providerBadges = {
-            Google: `<svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Google</title><path d="M12.0001 12.0001L12.0001 11.9999C12.0001 11.9999 12.0001 12.0001 12.0001 12.0001ZM12.0001 4.80005C10.091 4.80005 8.35636 5.86368 7.31818 7.31823L9.09091 8.5455C9.72727 7.68186 10.7727 7.09095 12.0001 7.09095C14.0455 7.09095 15.6818 8.72732 15.6818 10.7728C15.6818 12.8182 14.0455 14.4546 12.0001 14.4546C10.9545 14.4546 10.091 13.9546 9.45455 13.2273L7.68182 14.4546C8.72727 15.7273 10.2818 16.6819 12.0001 16.6819C15.3182 16.6819 18.0001 14.0455 18.0001 10.7728C18.0001 7.45459 15.2727 4.80005 12.0001 4.80005Z"/></svg>`,
-            OpenAI: `<svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>OpenAI</title><path d="M22.288 15.326c-.465-3.387-2.37-6.33-5.18-8.23-2.92-1.96-6.52-2.48-9.94-.46-3.15 1.88-5.32 4.97-6.14 8.3-1.04 4.25.13 8.68 2.94 11.83 2.68 3.03 6.63 4.54 10.56 4.24 4.14-.31 7.85-2.61 9.9-6.02 2.05-3.42 2.43-7.53 1.86-11.66zM8.344 3.973c1.44-.63 2.99-.96 4.56-.96 3.39 0 6.5 1.59 8.52 4.14-1.29-1.29-2.84-2.27-4.56-2.88-1.59-.57-3.29-.81-5.04-.66-1.88.16-3.69.79-5.22 1.86.35-.46.72-.9 1.11-1.32.4-.42.83-.81 1.29-1.17.1-.08.2-.15.3-.21zm-5.4 17.395C1.624 18.27 1.11 14.1 2.1 10.03c.51-2.09 1.63-3.95 3.18-5.37-1.44.92-2.61 2.2-3.42 3.75-.84 1.59-1.29 3.36-1.32 5.19-.03 1.91.3 3.81 1.02 5.58.15.38.32.75.51 1.14zm13.152 2.652c-2.49 1.2-5.29 1.52-7.95.81-2.7-.72-5.05-2.33-6.66-4.59.93 1.41 2.21 2.58 3.75 3.42 1.56.84 3.33 1.29 5.16 1.32 1.88.03 3.75-.3 5.55-1.02.45-.18.89-.4 1.32-.63.2-.12.4-.24.6-.39.1-.08.2-.15.3-.24.02-.02.04-.03.06-.05-.18.12-.36.24-.54.35zm5.01-6.933c-.51 2.09-1.63 3.95-3.18 5.37 1.44-.93 2.61-2.21 3.42-3.75.84-1.59 1.29-3.36 1.32-5.19.03-1.91-.3-3.81-1.02-5.58-.15-.38-.32-.75-.51-1.11-.18-.39-.39-.77-.6-1.14.36.45.71.92 1.02 1.41.32.51.6 1.05.84 1.59.54 1.29.84 2.64.87 4.02.03 1.38-.18 2.76-.63 4.08z"/></svg>`,
-            Meta: `<svg class="provider-badge" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Meta</title><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 21.6c-5.302 0-9.6-4.298-9.6-9.6S6.698 2.4 12 2.4s9.6 4.298 9.6 9.6-4.298 9.6-9.6 9.6zM7.23 10.08c0-2.475 2.16-4.47 4.77-4.47 2.61 0 4.77 1.995 4.77 4.47 0 2.475-2.16 4.47-4.77 4.47-2.61 0-4.77-1.995-4.77-4.47zm7.11 0c0-1.282-1.08-2.31-2.34-2.31-1.26 0-2.34 1.028-2.34 2.31 0 1.282 1.08 2.31 2.34 2.31 1.26 0 2.34-1.028 2.34-2.31z"/></svg>`
-        };
 
         document.addEventListener('DOMContentLoaded', () => {
             const tabs = document.querySelectorAll('.workspace-tab');
             const workspaces = document.querySelectorAll('.workspace');
+            const searchInput = document.getElementById('search-input');
 
-            function renderModels() {
-                // Clear all grids first
+            function renderModels(filter = '') {
                 document.querySelectorAll('.model-grid').forEach(grid => grid.innerHTML = '');
+                
+                const lowerCaseFilter = filter.toLowerCase();
 
-                // Populate each grid
-                aiModels.forEach(model => {
-                    const grid = document.getElementById(`grid-${model.provider.toLowerCase()}`);
+                const filteredModels = aiModels.filter(model => 
+                    model.name.toLowerCase().includes(lowerCaseFilter) ||
+                    model.provider.toLowerCase().includes(lowerCaseFilter) ||
+                    model.description.toLowerCase().includes(lowerCaseFilter) ||
+                    model.strengths.toLowerCase().includes(lowerCaseFilter)
+                );
+
+                if (filteredModels.length === 0) {
+                    const activeGrid = document.querySelector('.workspace.active .model-grid');
+                    if(activeGrid) activeGrid.innerHTML = `<p style="color: var(--text-secondary); text-align: center; grid-column: 1 / -1;">No models match your search.</p>`;
+                }
+
+                filteredModels.forEach(model => {
+                    const gridId = `grid-${model.provider.toLowerCase().replace(' ', '')}`;
+                    const grid = document.getElementById(gridId);
                     if (!grid) return;
 
                     const card = document.createElement('div');
@@ -271,13 +348,23 @@
                     card.innerHTML = `
                         <div class="card-header">
                             <h3>${model.name}</h3>
-                            ${providerBadges[model.provider] || ''}
                         </div>
                         <div class="card-body">
                             <p>${model.description}</p>
-                        </div>
-                        <div class="card-tags">
-                            ${model.use_cases.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            <div class="comparison-grid">
+                                <div class="info-item">
+                                    <div class="label">Pricing</div>
+                                    <div class="value ${model.pricing.toLowerCase().replace(' ', '')}">${model.pricing}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="label">Tokenization</div>
+                                    <div class="value">${model.tokenization}</div>
+                                </div>
+                                <div class="info-item" style="grid-column: 1 / -1;">
+                                    <div class="label">Best For</div>
+                                    <div class="value">${model.strengths}</div>
+                                </div>
+                            </div>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -296,15 +383,15 @@
                         ws.classList.add('active');
                     }
                 });
+                // When switching tabs, re-render models based on the current search term
+                renderModels(searchInput.value);
             }
             
             tabs.forEach(tab => tab.addEventListener('click', switchTab));
+            searchInput.addEventListener('input', (e) => renderModels(e.target.value));
 
-            // Initial render
             renderModels();
         });
     </script>
 </body>
 </html>
-
-
